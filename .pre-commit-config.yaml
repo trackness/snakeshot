@@ -1,0 +1,26 @@
+default_language_version:
+    python: python3.8
+default_stages: [commit]
+repos:
+-   repo: local
+    hooks:
+
+    - id: flake8
+      name: flake8
+      language: system
+      entry: poetry run flake8
+      types: [python]
+
+    - id: black
+      name: black
+      language: system
+      entry: poetry run black
+      types: [python]
+
+    - id: pytest
+      name: pytest
+      language: system
+      entry: poetry run pytest -v --cov tests/ --cov-fail-under=90
+      pass_filenames: false
+      always_run: true
+      stages: [push]

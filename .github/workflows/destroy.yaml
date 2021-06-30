@@ -1,0 +1,59 @@
+name: "Destroy"
+
+on:
+  workflow_dispatch:
+
+env:
+  APP_NAME: "python-lambda-template"
+  PAK_NAME: "python_lambda_template"
+  ENV: prod
+  API_DOMAIN: "trackness.net"
+  TF_WORKING_DIR: terraform
+  AWS_REGION: eu-west-2
+
+jobs:
+
+  destroy:
+    name: Terraform Destroy
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Set AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: ${{ env.APP_NAME }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.15.4
+
+      - name: Terraform
+        uses: trackness/gha/terraform@main
+        env:
+          TF_CONFIG_DIR: config
+        with:
+          working-dir: ${{ env.TF_WORKING_DIR }}
+          backend-configs: |
+            region=${{ env.AWS_REGION }} \
+            bucket=${{ secrets.AWS_ACCOUNT_ID }}-tfstate \
+            dynamodb_table=${{ secrets.AWS_ACCOUNT_ID }}-tfstate-lock \
+            key=${{ env.APP_NAME }}/prod.tfstate
+          vars: "
+            -var app_name=${{ env.APP_NAME }} \
+            -var zip_target=${{ env.PAK_NAME }} \
+            -var environment=${{ env.ENV }} \
+            -var owner=$GITHUB_ACTOR \
+            -var commit=$GITHUB_SHA \
+            -var repo=$GITHUB_REPOSITORY
+            -var account_id=${{ secrets.AWS_ACCOUNT_ID }} \
+            -var root_domain=${{ env.API_DOMAIN }}
+            "
+          destroy: true
