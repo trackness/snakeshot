@@ -5,8 +5,8 @@ on:
   workflow_dispatch:
 
 env:
-  APP_NAME: "python-lambda-template"
-  PAK_NAME: "python_lambda_template"
+  APP_NAME: "snakeshot"
+  PAK_NAME: "snakeshot"
   ENV: prod
   API_DOMAIN: "trackness.net"
   POETRY_VERSION: 1.1.6

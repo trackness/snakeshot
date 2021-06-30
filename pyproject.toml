@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "python-lambda-template"
+name = "snakeshot"
 version = "0.1.0"
 description = ""
 authors = ["trackness <40263851+trackness@users.noreply.github.com>"]

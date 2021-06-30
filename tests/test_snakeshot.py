@@ -1,4 +1,4 @@
-from python_lambda_template import __version__
+from snakeshot import __version__
 
 
 def test_version():
