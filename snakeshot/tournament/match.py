@@ -47,3 +47,7 @@ class Match:
     @property
     def winner_actual(self) -> Player:
         return self._winner_actual
+
+    @winner_actual.setter
+    def winner_actual(self, value: Player):
+        self._winner_actual = value
