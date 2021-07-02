@@ -1,5 +1,5 @@
-from snakeshot.tournament.match import Match
-from snakeshot.tournament.player import Player
+from snakeshot.model.match import Match
+from snakeshot.model.player import Player
 
 
 class Round:

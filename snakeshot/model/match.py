@@ -1,4 +1,4 @@
-from snakeshot.tournament.player import Player
+from snakeshot.model.player import Player
 
 
 class Match:
