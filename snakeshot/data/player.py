@@ -7,7 +7,8 @@ class Player:
             first_name: str = None,
             last_name: str = None,
             full_name: str = None,
-            nationality: str = None
+            nationality: str = None,
+            rank: int = None
     ):
         self._id = _id
         if gender in {"M", "H"}:
@@ -18,6 +19,7 @@ class Player:
         self._last_name: str = last_name
         self._full_name: str = full_name
         self._nationality: str = nationality
+        self._rank = rank
 
     @property
     def id(self) -> int:
@@ -43,6 +45,10 @@ class Player:
     def nationality(self) -> str:
         return self._nationality
 
+    @property
+    def rank(self) -> int:
+        return self._rank
+
     @classmethod
     def qualifier(cls):
-        return Player(first_name="Q", last_name="Q", full_name="Q Q", nationality="-Q-")
+        return Player(first_name="Q", last_name="Q", full_name="Q Q", nationality="-Q-", rank=999)

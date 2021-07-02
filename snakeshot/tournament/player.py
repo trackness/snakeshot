@@ -33,14 +33,3 @@ class Player(player.Player):
     @odds.setter
     def odds(self, value):
         self._odds.append(Decimal(value))
-
-    @property
-    def rank(self):
-        return self._rank
-
-    @rank.setter
-    def rank(self, value):
-        self._rank = value
-
-    def source_rank(self):
-        self.rank = 0
