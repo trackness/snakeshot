@@ -4,7 +4,7 @@ from statistics import mean
 
 class Player:
 
-    __slots__ = "_name_abbreviated", "_name_full", "_nationality", "_seed", "_entry_type", "_odds"
+    __slots__ = "_name_abbreviated", "_name_full", "_nationality", "_seed", "_entry_type", "_odds", "_rank"
 
     def __init__(
             self,
@@ -13,6 +13,7 @@ class Player:
             nationality: str = None,
             seed: int = None,
             entry_type: str = None,
+            rank: int = None,
     ):
         self._name_abbreviated: str = name_abbreviated
         self._name_full: str = name_full
@@ -20,6 +21,7 @@ class Player:
         self._seed: int = seed
         self._entry_type: str = entry_type
         self._odds: list[Decimal] = []
+        self._rank: int = rank
 
     @classmethod
     def qualifier(cls):
@@ -52,3 +54,11 @@ class Player:
     @odds.setter
     def odds(self, value):
         self._odds.append(Decimal(value))
+
+    @property
+    def rank(self):
+        return self._rank
+
+    @rank.setter
+    def rank(self, value):
+        self._rank = value
