@@ -11,9 +11,9 @@ class Player:
             rank: int = None
     ):
         self._id = _id
-        if gender in {"M", "H"}:
+        if gender in {"M", "MS"}:
             self._gender = "M"
-        if gender in {"W", "D"}:
+        if gender in {"W", "WS", "L", "LS"}:
             self._gender = "W"
         self._first_name: str = first_name
         self._last_name: str = last_name
