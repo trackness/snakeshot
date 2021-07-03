@@ -2,4 +2,5 @@ from snakeshot.model.slam import Slam
 
 
 class Wimbledon(Slam):
-    pass
+    def __init__(self):
+        super().__init__()
