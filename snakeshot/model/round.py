@@ -3,7 +3,7 @@ from snakeshot.model.player import Player
 
 
 class Round:
-    def __init__(self, matches: list[Match] = None):
+    def __init__(self, matches: list[Match]):
         self._matches: list[Match] = matches
         self._winners: list[Player] = [match.winner_expected for match in self._matches]
 
