@@ -1,0 +1,51 @@
+{ "draws": [
+{ "order": 0,
+"id": "MS",
+"title": "Gentlemen's Singles",
+"url": "https://2021.wimbledon.com/en_GB/draws/index.html?event=MS",
+"feed_url": "https://2021.wimbledon.com/en_GB/scores/feeds/2021/draws/MS.json",
+"webview_url": "https://2021.wimbledon.com/webview/en_GB/draws/MS.html"
+},
+{ "order": 1,
+"id": "LS",
+"title": "Ladies' Singles",
+"url": "https://2021.wimbledon.com/en_GB/draws/index.html?event=LS",
+"feed_url": "https://2021.wimbledon.com/en_GB/scores/feeds/2021/draws/LS.json",
+"webview_url": "https://2021.wimbledon.com/webview/en_GB/draws/LS.html"
+},
+{ "order": 2,
+"id": "MD",
+"title": "Gentlemen's Doubles",
+"url": "https://2021.wimbledon.com/en_GB/draws/index.html?event=MD",
+"feed_url": "https://2021.wimbledon.com/en_GB/scores/feeds/2021/draws/MD.json",
+"webview_url": "https://2021.wimbledon.com/webview/en_GB/draws/MD.html"
+},
+{ "order": 3,
+"id": "LD",
+"title": "Ladies' Doubles",
+"url": "https://2021.wimbledon.com/en_GB/draws/index.html?event=LD",
+"feed_url": "https://2021.wimbledon.com/en_GB/scores/feeds/2021/draws/LD.json",
+"webview_url": "https://2021.wimbledon.com/webview/en_GB/draws/LD.html"
+},
+{ "order": 4,
+"id": "MX",
+"title": "Mixed Doubles",
+"url": "https://2021.wimbledon.com/en_GB/draws/index.html?event=MX",
+"feed_url": "https://2021.wimbledon.com/en_GB/scores/feeds/2021/draws/MX.json",
+"webview_url": "https://2021.wimbledon.com/webview/en_GB/draws/MX.html"
+},
+{ "order": 5,
+"id": "QS",
+"title": "G. Qualifying Singles",
+"url": "https://2021.wimbledon.com/en_GB/draws/index.html?event=QS",
+"feed_url": "https://2021.wimbledon.com/en_GB/scores/feeds/2021/draws/QS.json",
+"webview_url": "https://2021.wimbledon.com/webview/en_GB/draws/QS.html"
+},
+{ "order": 6,
+"id": "RS",
+"title": "L. Qualifying Singles",
+"url": "https://2021.wimbledon.com/en_GB/draws/index.html?event=RS",
+"feed_url": "https://2021.wimbledon.com/en_GB/scores/feeds/2021/draws/RS.json",
+"webview_url": "https://2021.wimbledon.com/webview/en_GB/draws/RS.html"
+}
+]}
