@@ -1,6 +1,7 @@
 from snakeshot.model.player import Player
 
 
+# TODO : Change to two players instead of list, just for init
 class Match:
     def __init__(self, players: list[Player], winner_actual: Player = None):
         self._players: list[Player] = players
