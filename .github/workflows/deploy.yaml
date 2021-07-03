@@ -38,6 +38,7 @@ jobs:
     name: Terraform Plan & Apply
     timeout-minutes: 10
     runs-on: ubuntu-latest
+#    TODO : depend on tests
     env:
       TF_WORKING_DIR: terraform
 
