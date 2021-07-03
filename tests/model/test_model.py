@@ -51,7 +51,6 @@ class TestMatch:
 
 
 class TestRound:
-
     # TODO : parameterize this
     def test_winners_1(self):
         p1 = Player(**standard_player, rank=1)
@@ -64,7 +63,7 @@ class TestRound:
 class TestTournament:
     def test_winner(self):
         players = [Player(**standard_player, rank=i + 1) for i in range(8)]
-        assert Tournament(players)._winner == players[0]
+        assert Tournament(players).rounds[-1].winners == [players[0]]
 
     def test_number_of_rounds(self):
         players = [Player(**standard_player, rank=i + 1) for i in range(16)]

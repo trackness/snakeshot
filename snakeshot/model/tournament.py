@@ -15,8 +15,11 @@ class Tournament:
             self._rounds.insert(i, Round(Tournament._players_to_matches(winners)))
         if len(self._rounds[-1].winners) != 1:
             raise Exception("more than one winner")
-        self._winner = self._rounds[-1].winners[0]
 
     @classmethod
     def _players_to_matches(cls, players: list[Player]) -> list[Match]:
         return [Match(list(pair)) for pair in zip(players[0::2], players[1::2])]
+
+    @property
+    def rounds(self):
+        return self._rounds
