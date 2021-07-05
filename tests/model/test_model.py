@@ -2,6 +2,7 @@ import pytest as pytest
 
 from snakeshot.model.match import Match
 from snakeshot.model.player import Player
+from snakeshot.model.Tour import Tour
 from snakeshot.model.round import Round
 from snakeshot.model.slam import Slam
 from snakeshot.model.tournament import Tournament
@@ -65,12 +66,20 @@ class TestTournament:
         assert Tournament(players)._n_rounds == 4
 
 
+@pytest.mark.skip
 class TestSlam:
     def test_mens_200(self):
-        assert len(Slam._mens_200()) == 200
+        assert len(Slam._mens_200()) == 1
 
     def test_womens_200(self):
         assert len(Slam._womens_200()) == 200
 
     def test_scrape_odds_list(self):
         pass
+
+
+class TestRankedPlayers:
+    def test_atp(self):
+        atp: Tour = Tour("ATP")
+        # assert len(atp.players) == 100
+        [print(f"{player.rank} {player.full_name}") for player in atp.players]

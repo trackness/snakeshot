@@ -5,24 +5,15 @@ from statistics import mean
 class Player:
     def __init__(
         self,
-        _id: int,
-        gender: str,
         first_name: str,
         last_name: str,
-        full_name: str,
         nationality: str,
         rank: int,
         seed: int = None,
         entry_type: str = None,
     ):
-        self._id = _id
-        if gender in {"M", "MS"}:
-            self._gender = "M"
-        if gender in {"W", "WS", "L", "LS"}:
-            self._gender = "W"
         self._first_name: str = first_name
         self._last_name: str = last_name
-        self._full_name: str = full_name
         self._nationality: str = nationality
         self._rank: int = rank
         self._seed: int = seed
@@ -30,24 +21,13 @@ class Player:
         self._odds: list[Decimal] = []
 
     @classmethod
-    def qualifier(cls, gender: str):
+    def qualifier(cls):
         return Player(
-            _id=0,
-            gender=gender,
             first_name="Q",
             last_name="Q",
-            full_name="Q Q",
             nationality="-Q-",
             rank=999,
         )
-
-    @property
-    def id(self) -> int:
-        return self._id
-
-    @property
-    def gender(self) -> str:
-        return self._gender
 
     @property
     def first_name(self) -> str:
@@ -59,7 +39,7 @@ class Player:
 
     @property
     def full_name(self) -> str:
-        return self._full_name
+        return f"{self._first_name} {self._last_name}"
 
     @property
     def nationality(self) -> str:
@@ -70,11 +50,11 @@ class Player:
         return self._rank
 
     @property
-    def seed(self):
+    def seed(self) -> int:
         return self._seed
 
     @property
-    def entry_type(self):
+    def entry_type(self) -> str:
         return self._entry_type
 
     @property
