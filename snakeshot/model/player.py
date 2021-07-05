@@ -1,5 +1,4 @@
 from decimal import Decimal
-from statistics import mean
 
 
 class Player:
@@ -18,7 +17,7 @@ class Player:
         self._rank: int = rank
         self._seed: int = seed
         self._entry_type: str = entry_type
-        self._odds: list[Decimal] = []
+        self._odds: Decimal = Decimal(9999)
 
     @classmethod
     def qualifier(cls):
@@ -26,7 +25,7 @@ class Player:
             first_name="Q",
             last_name="Q",
             nationality="-Q-",
-            rank=999,
+            rank=9999,
         )
 
     @property
@@ -59,8 +58,8 @@ class Player:
 
     @property
     def odds(self) -> Decimal:
-        return mean(self._odds) if len(self._odds) != 0 else Decimal(999)
+        return self._odds
 
     @odds.setter
-    def odds(self, value):
-        self._odds.append(Decimal(value))
+    def odds(self, value: Decimal):
+        self._odds: Decimal = value

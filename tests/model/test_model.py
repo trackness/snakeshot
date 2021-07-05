@@ -10,13 +10,13 @@ from snakeshot.model.tournament import Tournament
 
 class TestPlayer:
     def test_odds(self):
-        player = Player(1, "M", "A", "B", "A B", "ABC", 1)
+        player = Player("A", "B", "ABC", 1)
         player.odds = 1.5
         player.odds = 3.0
         assert player.odds == 2.25
 
     def test_qualifier(self):
-        player = Player.qualifier("M")
+        player = Player.qualifier()
         assert player.first_name == "Q"
         assert player.last_name == "Q"
         assert player.full_name == "Q Q"
@@ -27,11 +27,11 @@ class TestPlayer:
 class TestMatch:
     @pytest.fixture
     def p1(self):
-        return Player(1, "M", "A", "B", "A B", "ABC", 1)
+        return Player("A", "B", "ABC", 1)
 
     @pytest.fixture
     def p2(self):
-        return Player(1, "M", "A", "B", "A B", "ABC", 2)
+        return Player("A", "B", "ABC", 2)
 
     def test_winner_odds(self, p1, p2):
         p1.odds = 2
@@ -49,30 +49,28 @@ class TestMatch:
 
 class TestRound:
     def test_winners(self):
-        p1 = Player(1, "M", "A", "B", "A B", "ABC", 1)
-        p2 = Player(2, "M", "A", "B", "A B", "ABC", 2)
-        p3 = Player(3, "M", "A", "B", "A B", "ABC", 3)
-        p4 = Player(4, "M", "A", "B", "A B", "ABC", 4)
+        p1 = Player("A", "B", "ABC", 1)
+        p2 = Player("A", "B", "ABC", 2)
+        p3 = Player("A", "B", "ABC", 3)
+        p4 = Player("A", "B", "ABC", 4)
         assert Round([Match([p1, p2]), Match([p3, p4])]).winners == [p1, p3]
 
 
 class TestTournament:
     def test_winner(self):
-        players = [Player(i + 1, "M", "A", "B", "A B", "ABC", i + 1) for i in range(8)]
+        players = [Player("A", "B", "ABC", i + 1) for i in range(8)]
         assert Tournament(players).rounds[-1].winners == [players[0]]
 
     def test_number_of_rounds(self):
-        players = [Player(i + 1, "M", "A", "B", "A B", "ABC", i + 1) for i in range(16)]
+        players = [Player("A", "B", "ABC", i + 1) for i in range(16)]
         assert Tournament(players)._n_rounds == 4
 
 
-@pytest.mark.skip
 class TestSlam:
-    def test_mens_200(self):
-        assert len(Slam._mens_200()) == 1
-
-    def test_womens_200(self):
-        assert len(Slam._womens_200()) == 200
+    def test_player_pool(self):
+        slam: Slam = Slam(300)
+        assert len(slam._player_pools.get("M")) == 300
+        assert len(slam._player_pools.get("W")) == 300
 
     def test_scrape_odds_list(self):
         pass
@@ -87,7 +85,7 @@ class TestTour:
         tour: Tour = Tour("WTA")
         assert len(tour.players) == 1000
 
-    def test_index_by_pid(self):
+    def test_index_by(self):
         inputs = [
             {"player_id": "0", "this": "a", "that": "b"},
             {"player_id": "1", "this": "c", "that": "d"},
