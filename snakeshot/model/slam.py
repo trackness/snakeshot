@@ -5,11 +5,12 @@ from snakeshot.model.tour import Tour
 
 
 class Slam(ABC):
-    def __init__(self, pool_depth: int = 1000):
+    def __init__(self, config: dict, pool_depth: int = 1000):
         self._player_pools: dict[str, list[Player]] = {
             "M": Tour("ATP", pool_depth).players,
             "W": Tour("WTA", pool_depth).players,
         }
+        # odds: Odds(config.get("slam"), config.get("tour"))
         Slam._set_odds(Slam._scrape_odds_list(), self._player_pools)
 
     @classmethod
