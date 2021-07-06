@@ -19,7 +19,3 @@ class Tournament:
     @classmethod
     def _players_to_matches(cls, players: list[Player]) -> list[Match]:
         return [Match(list(pair)) for pair in zip(players[0::2], players[1::2])]
-
-    @property
-    def rounds(self):
-        return self._rounds
