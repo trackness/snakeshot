@@ -22,21 +22,24 @@ class Tour:
         ],
     }
 
-    def __init__(self, tour: str, n_players: int = 1000):
-        if tour.lower() in {"atp", "wta"}:
-            self._players: list[Player] = Tour._build_players(tour.lower(), n_players)
-        else:
-            # TODO : custom logging / exceptions
-            raise Exception("fuck")
+    def __init__(self, tour: str, depth: int):
+        self._depth = depth
+        if tour.lower() == "mens":
+            self._tour = "atp"
+        if tour.lower() == "womens":
+            self._tour = "wta"
+        # else:
+        #     # TODO : custom logging / exceptions
+        #     raise Exception(f"invalid tour: '{tour}'")
+        self._players: list[Player] = self._build_players()
 
     @property
     def players(self):
         return self._players
 
-    @classmethod
-    def _build_players(cls, tour: str, n_players) -> list[Player]:
-        rankings: dict = Tour._url_to_dict(tour, Tour._RANKINGS, Tour._RID)
-        players: dict = Tour._url_to_dict(tour, Tour._PLAYERS, Tour._PID)
+    def _build_players(self) -> list[Player]:
+        rankings: dict = self._url_to_dict(Tour._RANKINGS, Tour._RID)
+        players: dict = self._url_to_dict(Tour._PLAYERS, Tour._PID)
         return [
             Player(
                 first_name=players.get(player).get("first_name"),
@@ -44,18 +47,18 @@ class Tour:
                 nationality=players.get(player).get("country_code"),
                 rank=rank,
             )
-            for rank, player in Tour._limit_rankings(rankings, n_players).items()
+            for rank, player in self._limit_rankings(rankings).items()
         ]
 
-    @classmethod
-    def _limit_rankings(cls, rankings: dict, count: int) -> dict[int, str]:
+    def _limit_rankings(self, rankings: dict) -> dict[int, str]:
         return {
-            int(k): v.get(Tour._PID) for k, v in rankings.items() if int(k) <= count
+            int(k): v.get(Tour._PID)
+            for k, v in rankings.items()
+            if int(k) <= self._depth
         }
 
-    @classmethod
-    def _url_to_dict(cls, tour: str, target: str, key: str) -> dict[str, dict]:
-        url = f"https://raw.githubusercontent.com/JeffSackmann/tennis_{tour}/master/{tour}_{target}.csv"
+    def _url_to_dict(self, target: str, key: str) -> dict[str, dict]:
+        url = f"https://raw.githubusercontent.com/JeffSackmann/tennis_{self._tour}/master/{self._tour}_{target}.csv"
         results = list(
             csv.DictReader(
                 requests.get(url, stream=True).iter_lines(decode_unicode=True),
