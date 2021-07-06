@@ -7,17 +7,23 @@ class Player:
         first_name: str,
         last_name: str,
         nationality: str,
-        rank: int,
+        rank: int = None,
         seed: int = None,
         entry_type: str = None,
     ):
         self._first_name: str = first_name
         self._last_name: str = last_name
         self._nationality: str = nationality
-        self._rank: int = rank
+        self._rank: int = rank if rank is not None else 9999
         self._seed: int = seed
         self._entry_type: str = entry_type
         self._odds: Decimal = Decimal(9999)
+
+    def summary(self):
+        if self._odds == Decimal(9999):
+            print(f"{self.full_name:30} | {self._rank: >3} |")
+        else:
+            print(f"{self.full_name:30} | {self._rank: >3} | {self.odds: >6.02f} |")
 
     @classmethod
     def qualifier(cls):
@@ -48,13 +54,25 @@ class Player:
     def rank(self) -> int:
         return self._rank
 
+    @rank.setter
+    def rank(self, value: int):
+        self._rank = value
+
     @property
     def seed(self) -> int:
         return self._seed
 
+    @seed.setter
+    def seed(self, value: int):
+        self._seed = value
+
     @property
     def entry_type(self) -> str:
         return self._entry_type
+
+    @entry_type.setter
+    def entry_type(self, value: str):
+        self._entry_type = value
 
     @property
     def odds(self) -> Decimal:

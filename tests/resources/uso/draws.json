@@ -1,0 +1,72 @@
+{ "draws": [
+{ "order": 0,
+"id": "MS",
+"title": "Men's Singles",
+"url": "https://2020.usopen.org/en_US/draws/index.html?event=MS",
+"feed_url": "https://2020.usopen.org/en_US/scores/feeds/2020/draws/MS.json",
+"webview_url": "https://2020.usopen.org/webview/en_US/draws/MS.html"
+},
+{ "order": 1,
+"id": "WS",
+"title": "Women's Singles",
+"url": "https://2020.usopen.org/en_US/draws/index.html?event=WS",
+"feed_url": "https://2020.usopen.org/en_US/scores/feeds/2020/draws/WS.json",
+"webview_url": "https://2020.usopen.org/webview/en_US/draws/WS.html"
+},
+{ "order": 2,
+"id": "MD",
+"title": "Men's Doubles",
+"url": "https://2020.usopen.org/en_US/draws/index.html?event=MD",
+"feed_url": "https://2020.usopen.org/en_US/scores/feeds/2020/draws/MD.json",
+"webview_url": "https://2020.usopen.org/webview/en_US/draws/MD.html"
+},
+{ "order": 3,
+"id": "WD",
+"title": "Women's Doubles",
+"url": "https://2020.usopen.org/en_US/draws/index.html?event=WD",
+"feed_url": "https://2020.usopen.org/en_US/scores/feeds/2020/draws/WD.json",
+"webview_url": "https://2020.usopen.org/webview/en_US/draws/WD.html"
+},
+{ "order": 4,
+"id": "CS",
+"title": "WC Men's Singles",
+"url": "https://2020.usopen.org/en_US/draws/index.html?event=CS",
+"feed_url": "https://2020.usopen.org/en_US/scores/feeds/2020/draws/CS.json",
+"webview_url": "https://2020.usopen.org/webview/en_US/draws/CS.html"
+},
+{ "order": 5,
+"id": "DS",
+"title": "WC Women's Singles",
+"url": "https://2020.usopen.org/en_US/draws/index.html?event=DS",
+"feed_url": "https://2020.usopen.org/en_US/scores/feeds/2020/draws/DS.json",
+"webview_url": "https://2020.usopen.org/webview/en_US/draws/DS.html"
+},
+{ "order": 6,
+"id": "CD",
+"title": "WC Men's Doubles",
+"url": "https://2020.usopen.org/en_US/draws/index.html?event=CD",
+"feed_url": "https://2020.usopen.org/en_US/scores/feeds/2020/draws/CD.json",
+"webview_url": "https://2020.usopen.org/webview/en_US/draws/CD.html"
+},
+{ "order": 7,
+"id": "DD",
+"title": "WC Women's Doubles",
+"url": "https://2020.usopen.org/en_US/draws/index.html?event=DD",
+"feed_url": "https://2020.usopen.org/en_US/scores/feeds/2020/draws/DD.json",
+"webview_url": "https://2020.usopen.org/webview/en_US/draws/DD.html"
+},
+{ "order": 8,
+"id": "US",
+"title": "WC Quad Singles",
+"url": "https://2020.usopen.org/en_US/draws/index.html?event=US",
+"feed_url": "https://2020.usopen.org/en_US/scores/feeds/2020/draws/US.json",
+"webview_url": "https://2020.usopen.org/en_US/scores/draws/2020_US_draw.pdf"
+},
+{ "order": 9,
+"id": "UD",
+"title": "WC Quad Doubles",
+"url": "https://2020.usopen.org/en_US/draws/index.html?event=UD",
+"feed_url": "https://2020.usopen.org/en_US/scores/feeds/2020/draws/UD.json",
+"webview_url": "https://2020.usopen.org/webview/en_US/draws/UD.html"
+}
+]}

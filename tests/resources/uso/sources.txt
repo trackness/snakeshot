@@ -1,0 +1,4 @@
+https://www.usopen.org/en_US/scores/feeds/2020/draws/draws.json
+
+https://2020.usopen.org/en_US/scores/feeds/2020/draws/MS.json
+https://2020.usopen.org/en_US/scores/feeds/2020/draws/WS.json
