@@ -98,5 +98,5 @@ jobs:
             -var repo=$GITHUB_REPOSITORY
             -var account_id=${{ secrets.AWS_ACCOUNT_ID }} \
             -var root_domain=${{ env.API_DOMAIN }} \
-            -var timeout=10
+            -var timeout=30
             "
