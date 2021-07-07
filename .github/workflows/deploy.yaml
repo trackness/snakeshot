@@ -84,7 +84,6 @@ jobs:
             key=${{ env.APP_NAME }}/prod.tfstate
           vars: "
             -var app_name=${{ env.APP_NAME }} \
-            -var zip_target=${{ env.APP_NAME }} \
             -var environment=${{ env.ENV }} \
             -var owner=$GITHUB_ACTOR \
             -var commit=$GITHUB_SHA \
