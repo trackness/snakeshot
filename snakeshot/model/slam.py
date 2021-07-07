@@ -8,7 +8,6 @@ from fuzzywuzzy import process
 
 from snakeshot.model.player import Player
 
-# from snakeshot.sources.odds import Odds
 from snakeshot.sources.odds import Odds
 from snakeshot.sources.tour import Tour
 from snakeshot.model.tournament import Tournament
@@ -34,7 +33,7 @@ class Slam(ABC):
     def _players(self, tour: str) -> list[Player]:
         competitors: list[Player] = self._load_draw(tour)
         self._add_ranks(tour, competitors)
-        self._add_odds(tour, competitors)
+        # self._add_odds(tour, competitors)
         return competitors
 
     @abstractmethod
