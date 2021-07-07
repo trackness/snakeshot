@@ -21,14 +21,15 @@ class Player:
 
     def __dict__(self) -> dict:
         return {
-            "full": self.full_name,
-            "first_name": self._first_name,
-            "last_name": self._last_name,
-            "nationality": self._nationality,
-            "rank": self._rank if self._rank != 9999 else None,
-            "seed": self._seed,
-            "entry_type": self._entry_type,
-            "odds": self._odds,
+            self.full_name: {
+                "first_name": self._first_name,
+                "last_name": self._last_name,
+                "nationality": self._nationality,
+                "rank": self._rank,
+                "seed": self._seed,
+                "entry_type": self._entry_type,
+                "odds": float(self._odds) if self._rank != Decimal(9999) else None,
+            }
         }
 
     @classmethod

@@ -19,10 +19,8 @@ class Slam(ABC):
             tour: Tournament(self._players(tour)) for tour in ["Mens", "Womens"]
         }
 
-    def __dict__(self) -> dict[str, Tournament]:
-        return {
-            tour: tournament.__dict__ for tour, tournament in self._tournaments.items()
-        }
+    def __dict__(self) -> dict[str, dict]:
+        return {tour: t.__dict__() for tour, t in self._tournaments.items()}
 
     @property
     def tournaments(self) -> dict[str, Tournament]:
