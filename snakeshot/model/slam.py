@@ -5,9 +5,9 @@ from urllib.error import HTTPError
 import requests as requests
 from fuzzywuzzy import process
 
-from snakeshot.model.odds import Odds
+from snakeshot.sources.odds import Odds
 from snakeshot.model.player import Player
-from snakeshot.model.tour import Tour
+from snakeshot.sources.tour import Tour
 from snakeshot.model.tournament import Tournament
 
 

@@ -2,7 +2,7 @@ import pytest as pytest
 
 from snakeshot.model.match import Match
 from snakeshot.model.player import Player
-from snakeshot.model.tour import Tour
+from snakeshot.sources.tour import Tour
 from snakeshot.model.round import Round
 from snakeshot.model.slam import Slam
 from snakeshot.model.tournament import Tournament
