@@ -19,12 +19,8 @@ class Odds:
         logger.info(f"Scraping {tour} odds from {url}")
         response: str = Odds._get_source(url)
         soup: BeautifulSoup = BeautifulSoup(response, "html.parser")
-        table: BeautifulSoup = soup.find("tbody", {"id": "t1"})
-        if table is None:
-            logger.warning("No odds table found")
-            return {}
         try:
-            rows = table.findAll("tr", {"class": "diff-row evTabRow bc"})
+            rows = soup.findAll("tr", {"class": "diff-row evTabRow bc"})
         except Exception as e:
             logger.warning(f"No odds rows found: {e}")
             return {}

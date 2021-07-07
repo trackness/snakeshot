@@ -37,3 +37,7 @@ def lambda_handler(event, context):
             "headers": {"Content-Type": "application/json"},
             "body": {"error": e},
         }
+
+
+if __name__ == "__main__":
+    lambda_handler({}, {})
