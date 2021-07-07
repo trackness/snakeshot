@@ -19,9 +19,14 @@ class Slam(ABC):
             tour: Tournament(self._players(tour)) for tour in ["Mens", "Womens"]
         }
 
+    def __dict__(self) -> dict[str, Tournament]:
+        return {
+            tour: tournament.__dict__ for tour, tournament in self._tournaments.items()
+        }
+
     @property
     def tournaments(self) -> dict[str, Tournament]:
-        return self.tournaments
+        return self._tournaments
 
     def _players(self, tour: str) -> list[Player]:
         competitors: list[Player] = self._load_draw(tour)
