@@ -9,6 +9,7 @@ from fuzzywuzzy import process
 from snakeshot.model.player import Player
 
 # from snakeshot.sources.odds import Odds
+from snakeshot.sources.odds import Odds
 from snakeshot.sources.tour import Tour
 from snakeshot.model.tournament import Tournament
 
@@ -32,10 +33,8 @@ class Slam(ABC):
 
     def _players(self, tour: str) -> list[Player]:
         competitors: list[Player] = self._load_draw(tour)
-        player_pool: list[Player] = Tour(tour, self._depth).players
-        Slam._add_ranks(tour, competitors, player_pool)
-        # odds: dict[str, Decimal] = Odds.scrape(tour, self._name.lower())
-        # [Slam._add_odd(competitors, *o) for o in odds.items()]
+        self._add_ranks(tour, competitors)
+        self._add_odds(tour, competitors)
         return competitors
 
     @abstractmethod
@@ -56,21 +55,17 @@ class Slam(ABC):
         except Exception as e:
             print(f"Other error occurred: {e}")
 
-    @classmethod
-    def _add_ranks(
-        cls, tour: str, competitors: list[Player], player_pool: list[Player]
-    ):
+    def _add_ranks(self, tour: str, competitors: list[Player]):
+        player_pool: list[Player] = Tour(tour, self._depth).players
         logger.info(f"Assigning {Slam._assoc.get(tour)} rankings")
         [Slam._add_rank(tour, c, player_pool) for c in competitors]
 
     @classmethod
-    def _add_rank(
-        cls, tour: str, competitor: Player, player_pool: list[Player]
-    ) -> None:
+    def _add_rank(cls, tour: str, competitor: Player, player_pool: list[Player]):
         for p in player_pool:
             if p.full_name == competitor.full_name:
                 competitor.rank = p.rank
-                logger.debug(Slam._rank_match(tour, "direct", competitor))
+                logger.debug(Slam._rank_match(tour, "exact", competitor))
                 return
         match_name = process.extractOne(
             competitor.full_name, [p.full_name for p in player_pool]
@@ -84,17 +79,17 @@ class Slam(ABC):
     def _rank_match(cls, tour: str, method: str, player: Player) -> str:
         return (
             f"{Slam._assoc.get(tour)} rank "
-            f"{f'({method})':8}: "
+            f"{f'({method})':7}: "
             f"{player.summary('tour')}"
         )
 
-    @classmethod
-    def _add_odds(cls, tour: str, competitors: list[Player], player_pool: list[Player]):
+    def _add_odds(self, tour: str, competitors: list[Player]):
+        odds: dict[str, Decimal] = Odds.scrape(tour, self._name.lower())
         logger.info(f"Assigning {tour} odds")
-        [Slam._add_rank(tour, c, player_pool) for c in competitors]
+        [Slam._add_odd(competitors, *o) for o in odds.items()]
 
     @classmethod
-    def _add_odd(cls, competitors: list[Player], player: str, odds: Decimal) -> None:
+    def _add_odd(cls, competitors: list[Player], player: str, odds: Decimal):
         for c in competitors:
             if c.full_name == player:
                 c.odds = odds
