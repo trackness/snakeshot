@@ -19,11 +19,18 @@ class Player:
         self._entry_type: str = entry_type
         self._odds: Decimal = Decimal(9999)
 
-    def summary(self):
-        if self._odds == Decimal(9999):
-            print(f"{self.full_name:30} | {self._rank: >3} |")
-        else:
-            print(f"{self.full_name:30} | {self._rank: >3} | {self.odds: >6.02f} |")
+    def __dict__(self):
+        return {
+            self.full_name: {
+                "first_name": self._first_name,
+                "last_name": self._last_name,
+                "nationality": self._nationality,
+                "rank": self._rank if self._rank != 9999 else None,
+                "seed": self._seed,
+                "entry_type": self._entry_type,
+                "odds": self._odds,
+            }
+        }
 
     @classmethod
     def qualifier(cls):
