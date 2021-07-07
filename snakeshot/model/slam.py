@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from decimal import Decimal
 from urllib.error import HTTPError
+from loguru import logger
 
 import requests as requests
 from fuzzywuzzy import process
@@ -19,6 +20,16 @@ class Slam(ABC):
 
     def __dict__(self) -> dict[str, dict]:
         return {tour: t.__dict__() for tour, t in self._tournaments.items()}
+
+    @classmethod
+    def _log_draw_player(cls, p: Player):
+        if p.seed is not None:
+            prefix = f"({p.seed:2})"
+        elif p.entry_type is not None:
+            prefix = f"({p.entry_type:>2})"
+        else:
+            prefix = "    "
+        logger.info(f"Found: {prefix} {p.full_name}")
 
     @property
     def tournaments(self) -> dict[str, Tournament]:

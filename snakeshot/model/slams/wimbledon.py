@@ -16,7 +16,7 @@ class Wimbledon(Slam):
         return {"Mens": "MS", "Womens": "LS"}.get(tour)
 
     def _load_draw(self, tour: str) -> list[Player]:
-        logger.info(f"Loading players from {self._name} website")
+        logger.info(f"Loading {tour} {self._name} players")
         matches: list[dict] = self._matches_json(tour)
         players = []
         for i, m in enumerate(matches):
@@ -47,9 +47,7 @@ class Wimbledon(Slam):
             player.seed = team.get("seed")
         if team.get("entryStatus"):
             player.entry_type = team.get("entryStatus")
-        logger.info(
-            f"Found: {player.full_name}{f' ({player.seed})' if player.seed is not None else ''}"
-        )
+        Slam._log_draw_player(player)
         return player
 
 
