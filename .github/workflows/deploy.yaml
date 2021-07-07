@@ -14,25 +14,25 @@ env:
 
 jobs:
 
-  test:
-    name: Poetry Pytest
-    timeout-minutes: 5
-    runs-on: ubuntu-latest
-    env:
-      PYTHON_VERSION: 3.8
-
-    steps:
-
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Poetry Pytest
-        uses: trackness/gha/poetry-test@main
-        with:
-          poetry-version: ${{ env.POETRY_VERSION }}
+#  test:
+#    name: Poetry Pytest
+#    timeout-minutes: 5
+#    runs-on: ubuntu-latest
+#    env:
+#      PYTHON_VERSION: 3.8
+#
+#    steps:
+#
+#      - uses: actions/checkout@v2
+#
+#      - uses: actions/setup-python@v2
+#        with:
+#          python-version: ${{ env.PYTHON_VERSION }}
+#
+#      - name: Poetry Pytest
+#        uses: trackness/gha/poetry-test@main
+#        with:
+#          poetry-version: ${{ env.POETRY_VERSION }}
 
   deploy:
     name: Terraform Plan & Apply
