@@ -9,7 +9,6 @@ from snakeshot.model.odds import Odds
 from snakeshot.model.player import Player
 from snakeshot.model.tour import Tour
 from snakeshot.model.tournament import Tournament
-from snakeshot.utils.printer import Printer
 
 
 class Slam(ABC):
@@ -19,7 +18,10 @@ class Slam(ABC):
         self._tournaments: dict[str, Tournament] = {
             tour: Tournament(self._players(tour)) for tour in ["Mens", "Womens"]
         }
-        Printer.print(self._tournaments)
+
+    @property
+    def tournaments(self) -> dict[str, Tournament]:
+        return self.tournaments
 
     def _players(self, tour: str) -> list[Player]:
         competitors: list[Player] = self._load_draw(tour)

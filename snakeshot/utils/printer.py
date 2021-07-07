@@ -1,3 +1,4 @@
+import json
 from string import Template
 
 from snakeshot.model.tournament import Tournament
@@ -5,31 +6,34 @@ from snakeshot.model.tournament import Tournament
 
 class Printer:
     @classmethod
-    def table(cls, tournaments: dict[str, Tournament]) -> list[str]:
+    def table(cls, slam: dict[str, Tournament]) -> dict[str, list[str]]:
+        for tour, tournament in slam.items():
+            return {tour: Printer._table_tournament(tour, tournament)}
+
+    @classmethod
+    def _table_tournament(cls, tour: str, t: Tournament):
         widths = {"t": 6, "r": 1, "m": 2, "p": 28}
-        result: list[str] = []
-        for tour, t in tournaments.items():
-            result.append(*Printer._table_header(widths))
-            for r in t.rounds:
-                if r.idx != 0:
-                    result.append(Printer._table_divider("round", widths))
-                n_m: int = 2 ** (6 - r.idx)
-                for m in r.matches:
-                    result.append(
-                        Printer._table_line(
-                            {
-                                "t": tour,
-                                "r": r.idx + 1,
-                                "m": f"{m.idx + 1:{widths.get('m')}} / {n_m:{widths.get('m')}}",
-                                "p1": m.players[0].full_name,
-                                "p2": m.players[1].full_name,
-                                "pw": m.winner_expected.full_name,
-                            },
-                            widths,
-                        )
+        result: list[str] = [*Printer._table_header(widths)]
+        for r in t.rounds:
+            if r.idx != 0:
+                result.append(Printer._table_divider("round", widths))
+            n_m: int = 2 ** (6 - r.idx)
+            for m in r.matches:
+                result.append(
+                    Printer._table_line(
+                        {
+                            "t": tour,
+                            "r": r.idx + 1,
+                            "m": f"{m.idx + 1:{widths.get('m')}} / {n_m:{widths.get('m')}}",
+                            "p1": m.players[0].full_name,
+                            "p2": m.players[1].full_name,
+                            "pw": m.winner_expected.full_name,
+                        },
+                        widths,
                     )
-            result.append(Printer._table_divider("foot", widths))
-            return result
+                )
+        result.append(Printer._table_divider("foot", widths))
+        return result
 
     @classmethod
     def _table_header(cls, widths: dict) -> list[str]:
@@ -76,3 +80,7 @@ class Printer:
             p2=f"{values.get('p2'):{widths.get('p')}}",
             pw=f"{values.get('pw'):{widths.get('p')}}",
         )
+
+    @classmethod
+    def json(cls, slam: dict[str, Tournament]) -> json:
+        pass

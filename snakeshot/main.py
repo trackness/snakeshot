@@ -1,31 +1,21 @@
 # import os
 #
-# from snakeshot.model.slams.wimbledon import Wimbledon
-# from snakeshot.utils.printer import Printer
+from snakeshot.model.slams.wimbledon import Wimbledon
+from snakeshot.utils.printer import Printer
 
 print("Loading function")
 
 
 def lambda_handler(event, context):
     try:
-        # print(f"Received event: {json.dumps(event, indent=2)}")
-        # [print(f"value = {value}") for value in event]
-        # return event["key1"]  # Echo back the first key value
-        # json_region = os.environ["AWS_REGION"]
-        # return {
-        #     "statusCode": 200,
-        #     "headers": {"Content-Type": "application/json"},
-        #     "body": f"[{json_region}] Anwar just seems like such an odd name for a girl dog. "
-        #     f"Best girl on the island regardless.",
-        #     # TODO : Body goes here as json
-        # }
-        # slam = Printer.table(Wimbledon("2021"))
-        return {
-            "statusCode": 200,
-            "headers": {"Content-Type": "text/html"},
-            "body": "slam",
-            # TODO : Body goes here as json
-        }
+        response = {"statusCode": 200}
+        if event.get("type") == "table":
+            response.update({"headers": {"Content-Type": "text/html"}})
+            response.update({"body": Printer.table(Wimbledon(2021).tournaments)})
+        else:
+            response.update({"headers": {"Content-Type": "application/json"}})
+            response.update({"body": Printer.json(Wimbledon(2021).tournaments)})
+        return response
 
     except Exception as e:
         raise Exception(f"Something went wrong: {e}")
