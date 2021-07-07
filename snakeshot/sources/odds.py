@@ -1,6 +1,7 @@
 from decimal import Decimal
 from statistics import mean
 from urllib.error import HTTPError
+from loguru import logger
 
 from bs4 import BeautifulSoup
 from requests import Session, Response
@@ -18,7 +19,7 @@ class Odds:
         try:
             table = soup.find("tbody", {"id": "t1"})
         except Exception as e:
-            print(f"No odds table found: {e}")
+            logger.warning(f"No odds table found: {e}")
             return {}
         try:
             rows = table.findAll("tr", {"class": "diff-row evTabRow bc"})

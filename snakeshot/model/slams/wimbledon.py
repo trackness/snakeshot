@@ -47,7 +47,7 @@ class Wimbledon(Slam):
             player.seed = team.get("seed")
         if team.get("entryStatus"):
             player.entry_type = team.get("entryStatus")
-        logger.info(f"Found: {player.summary('draw')}")
+        logger.debug(f"Found: {player.summary('draw')}")
         return player
 
 

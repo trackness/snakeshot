@@ -106,7 +106,7 @@ class Player:
         return f"{prefix} {self.full_name}"
 
     def _summary_tour(self):
-        prefix = f"({self._rank:2})" if self._rank is not None else "    "
+        prefix = f"({self._rank:3})" if self._rank is not None else "    "
         return f"{prefix} {self.full_name}"
 
     def _summary_odds(self):
