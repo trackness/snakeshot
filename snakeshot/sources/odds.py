@@ -46,7 +46,6 @@ class Odds:
             logger.error(f"HTTP error: {e}")
         except Exception as e:
             logger.error(f"Other error: {e}")
-        return ""
 
     @classmethod
     def _compile(cls, row: BeautifulSoup) -> list[Decimal]:
