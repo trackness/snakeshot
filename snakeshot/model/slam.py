@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from decimal import Decimal
+
+# from decimal import Decimal
 from urllib.error import HTTPError
 from loguru import logger
 
@@ -8,7 +9,7 @@ from fuzzywuzzy import process
 
 from snakeshot.model.player import Player
 
-from snakeshot.sources.odds import Odds
+# from snakeshot.sources.odds import Odds
 from snakeshot.sources.tour import Tour
 from snakeshot.model.tournament import Tournament
 
@@ -82,23 +83,23 @@ class Slam(ABC):
             f"{player.summary('tour')}"
         )
 
-    def _add_odds(self, tour: str, competitors: list[Player]):
-        odds: dict[str, Decimal] = Odds.scrape(self._name, tour)
-        logger.info(f"Assigning {tour} odds")
-        [Slam._add_odd(tour, competitors, *o) for o in odds.items()]
-
-    @classmethod
-    def _add_odd(cls, tour: str, competitors: list[Player], player: str, odds: Decimal):
-        for c in competitors:
-            if c.full_name == player:
-                c.odds = odds
-                logger.debug(Slam._odds_match(tour, "exact", c))
-                return
-        match_name = process.extractOne(player, [c.full_name for c in competitors])
-        c = next(c for c in competitors if c.full_name == match_name[0])
-        c.odds = odds
-        logger.debug(Slam._odds_match(tour, "fuzzy", c))
-
-    @classmethod
-    def _odds_match(cls, tour: str, method: str, player: Player) -> str:
-        return f"{tour} odds " f"{f'({method})':7}: " f"{player.summary('odds')}"
+    # def _add_odds(self, tour: str, competitors: list[Player]):
+    #     odds: dict[str, Decimal] = Odds.scrape(self._name, tour)
+    #     logger.info(f"Assigning {tour} odds")
+    #     [Slam._add_odd(tour, competitors, *o) for o in odds.items()]
+    #
+    # @classmethod
+    # def _add_odd(cls, tour: str, competitors: list[Player], player: str, odds: Decimal):
+    #     for c in competitors:
+    #         if c.full_name == player:
+    #             c.odds = odds
+    #             logger.debug(Slam._odds_match(tour, "exact", c))
+    #             return
+    #     match_name = process.extractOne(player, [c.full_name for c in competitors])
+    #     c = next(c for c in competitors if c.full_name == match_name[0])
+    #     c.odds = odds
+    #     logger.debug(Slam._odds_match(tour, "fuzzy", c))
+    #
+    # @classmethod
+    # def _odds_match(cls, tour: str, method: str, player: Player) -> str:
+    #     return f"{tour} odds " f"{f'({method})':7}: " f"{player.summary('odds')}"
