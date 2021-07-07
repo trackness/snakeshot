@@ -95,7 +95,8 @@ class Slam(ABC):
                 logger.debug(Slam._odds_match(tour, "exact", c))
                 return
         match_name = process.extractOne(player, [c.full_name for c in competitors])
-        next(c for c in competitors if c.full_name == match_name[0]).odds = odds
+        c = next(c for c in competitors if c.full_name == match_name[0])
+        c.odds = odds
         logger.debug(Slam._odds_match(tour, "fuzzy", c))
 
     @classmethod

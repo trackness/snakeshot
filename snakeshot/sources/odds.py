@@ -19,8 +19,8 @@ class Odds:
             f"{slam.lower()}/{tour.lower()}/{tour.lower()}-{slam.lower()}/winner"
         )
         logger.info(f"Scraping {tour} odds from {url}")
-        response = Odds._get_source(url)
-        soup: BeautifulSoup = BeautifulSoup(response.text, "html.parser")
+        response: str = Odds._get_source(url)
+        soup: BeautifulSoup = BeautifulSoup(response, "html.parser")
         table = soup.find("tbody", {"id": "t1"})
         if table is None:
             logger.warning("No odds table found")
@@ -37,16 +37,17 @@ class Odds:
         }
 
     @classmethod
-    def _get_source(cls, url: str) -> Response:
+    def _get_source(cls, url: str) -> str:
         session: Session = get_session()
         try:
             response: Response = session.get(url)
             response.raise_for_status()
-            return response
+            return response.text
         except HTTPError as e:
             logger.error(f"HTTP error: {e}")
         except Exception as e:
             logger.error(f"Other error: {e}")
+        return ""
 
     @classmethod
     def _compile(cls, row: BeautifulSoup) -> list[Decimal]:
