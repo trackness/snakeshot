@@ -1,4 +1,4 @@
 locals {
-  function_name = "${var.app_name}-${var.environment}"
+  function_name = var.app_name
   zip_target    = var.zip_target != 0 ? var.zip_target : var.app_name
 }
