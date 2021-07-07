@@ -7,8 +7,10 @@ from snakeshot.model.tournament import Tournament
 class Printer:
     @classmethod
     def table(cls, slam: dict[str, Tournament]) -> dict[str, list[str]]:
-        for tour, tournament in slam.items():
-            return {tour: Printer._table_tournament(tour, tournament)}
+        return {
+            tour: Printer._table_tournament(tour, tournament)
+            for tour, tournament in slam.items()
+        }
 
     @classmethod
     def _table_tournament(cls, tour: str, t: Tournament):
