@@ -8,6 +8,14 @@ class Match:
         self._players: list[Player] = players
         self._winner_expected: int = self._set_winner_expected()
 
+    def __dict__(self):
+        return {
+            self._idx: {
+                "players": [p.__dict__ for p in self._players],
+                "winner": self.winner_expected.__dict__,
+            }
+        }
+
     @property
     def idx(self) -> int:
         return self._idx
