@@ -18,6 +18,8 @@ class Odds:
         )
         logger.info(f"Scraping {tour} odds from {url}")
         response: str = Odds._get_source(url)
+        if response == "" or response is None:
+            return {}
         soup: BeautifulSoup = BeautifulSoup(response, "html.parser")
         try:
             rows = soup.findAll("tr", {"class": "diff-row evTabRow bc"})
