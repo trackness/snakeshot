@@ -12,6 +12,7 @@ cloudscraper = "^1.2.58"
 pre-commit = "^2.13.0"
 setuptools = "^57.1.0"
 fuzzywuzzy = {extras = ["speedup"], version = "^0.18.0"}
+loguru = "^0.5.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

@@ -9,6 +9,7 @@ from snakeshot.model.odds import Odds
 from snakeshot.model.player import Player
 from snakeshot.model.tour import Tour
 from snakeshot.model.tournament import Tournament
+from snakeshot.utils.printer import Printer
 
 
 class Slam(ABC):
@@ -18,6 +19,7 @@ class Slam(ABC):
         self._tournaments: dict[str, Tournament] = {
             tour: Tournament(self._players(tour)) for tour in ["Mens", "Womens"]
         }
+        Printer.print(self._tournaments)
 
     def _players(self, tour: str) -> list[Player]:
         competitors: list[Player] = self._load_draw(tour)
@@ -25,7 +27,6 @@ class Slam(ABC):
         [Slam._add_rank(c, player_pool) for c in competitors]
         odds: dict[str, Decimal] = Odds.scrape(self._name.lower(), tour)
         [Slam._add_odds(competitors, *o) for o in odds.items()]
-        [c.summary() for c in competitors]
         return competitors
 
     @abstractmethod
@@ -67,7 +68,3 @@ class Slam(ABC):
                 return
         match_name = process.extractOne(player, [c.full_name for c in competitors])
         next(c for c in competitors if c.full_name == match_name[0]).odds = odds
-
-    @property
-    def results(self) -> str:
-        pass

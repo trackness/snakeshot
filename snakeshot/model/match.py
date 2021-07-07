@@ -3,9 +3,18 @@ from snakeshot.model.player import Player
 
 # TODO : Change to two players instead of list, just for init
 class Match:
-    def __init__(self, players: list[Player]):
+    def __init__(self, idx: int, players: list[Player]):
+        self._idx = idx
         self._players: list[Player] = players
         self._winner_expected: int = self._set_winner_expected()
+
+    @property
+    def idx(self) -> int:
+        return self._idx
+
+    @property
+    def players(self) -> list[Player]:
+        return self._players
 
     @property
     def winner_expected(self) -> Player:
