@@ -49,7 +49,3 @@ class Wimbledon(Slam):
             player.entry_type = team.get("entryStatus")
         logger.debug(f"Found: {player.summary('draw')}")
         return player
-
-
-if __name__ == "__main__":
-    w = Wimbledon(2021)
