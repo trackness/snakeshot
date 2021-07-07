@@ -18,7 +18,7 @@ class Odds:
             f"https://www.oddschecker.com/tennis/"
             f"{slam.lower()}/{tour.lower()}/{tour.lower()}-{slam.lower()}/winner"
         )
-        logger.info(f"Scraping {tour.upper()} odds from {url}")
+        logger.info(f"Scraping {tour} odds from {url}")
         response = Odds._get_source(url)
         soup: BeautifulSoup = BeautifulSoup(response.text, "html.parser")
         table = soup.find("tbody", {"id": "t1"})

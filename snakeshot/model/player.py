@@ -110,5 +110,5 @@ class Player:
         return f"{prefix} {self.full_name}"
 
     def _summary_odds(self):
-        prefix = f"({float(self._odds):2.20})" if self._odds is not None else "       "
+        prefix = f"({self._odds:6.2f})" if self._odds is not None else "       "
         return f"{prefix} {self.full_name}"
