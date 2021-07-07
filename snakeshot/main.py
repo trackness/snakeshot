@@ -33,7 +33,7 @@ def lambda_handler(event, context):
     except Exception as e:
         logger.error(f"Unable to process event: {e}")
         return {
-            "statusCode": 500,
+            "statusCode": 200,
             "headers": {"Content-Type": "application/json"},
             "body": {"error": e},
         }
