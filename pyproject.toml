@@ -9,7 +9,6 @@ python = "^3.8"
 requests = "^2.25.1"
 beautifulsoup4 = "^4.9.3"
 fuzzywuzzy = {extras = ["speedup"], version = "^0.18.0"}
-loguru = "^0.5.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
