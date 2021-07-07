@@ -1,4 +1,7 @@
-import os
+# import os
+#
+# from snakeshot.model.slams.wimbledon import Wimbledon
+# from snakeshot.utils.printer import Printer
 
 print("Loading function")
 
@@ -8,12 +11,19 @@ def lambda_handler(event, context):
         # print(f"Received event: {json.dumps(event, indent=2)}")
         # [print(f"value = {value}") for value in event]
         # return event["key1"]  # Echo back the first key value
-        json_region = os.environ["AWS_REGION"]
+        # json_region = os.environ["AWS_REGION"]
+        # return {
+        #     "statusCode": 200,
+        #     "headers": {"Content-Type": "application/json"},
+        #     "body": f"[{json_region}] Anwar just seems like such an odd name for a girl dog. "
+        #     f"Best girl on the island regardless.",
+        #     # TODO : Body goes here as json
+        # }
+        # slam = Printer.table(Wimbledon("2021"))
         return {
             "statusCode": 200,
-            "headers": {"Content-Type": "application/json"},
-            "body": f"[{json_region}] Anwar just seems like such an odd name for a girl dog. "
-            f"Best girl on the island regardless.",
+            "headers": {"Content-Type": "text/html"},
+            "body": "slam",
             # TODO : Body goes here as json
         }
 
