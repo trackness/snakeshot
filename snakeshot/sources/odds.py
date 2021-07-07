@@ -12,19 +12,23 @@ from snakeshot.utils.session import get_session
 class Odds:
     @classmethod
     def scrape(cls, slam: str, tour: str) -> dict[str, Decimal]:
+        slam = slam.lower()
         tour = tour.lower()
-        url = f"https://www.oddschecker.com/tennis/{slam}/{tour}/{tour}-{slam}/winner"
+        url = (
+            f"https://www.oddschecker.com/tennis/"
+            f"{slam.lower()}/{tour.lower()}/{tour.lower()}-{slam.lower()}/winner"
+        )
+        logger.info(f"Scraping {tour.upper()} odds from {url}")
         response = Odds._get_source(url)
         soup: BeautifulSoup = BeautifulSoup(response.text, "html.parser")
-        try:
-            table = soup.find("tbody", {"id": "t1"})
-        except Exception as e:
-            logger.warning(f"No odds table found: {e}")
+        table = soup.find("tbody", {"id": "t1"})
+        if table is None:
+            logger.warning("No odds table found")
             return {}
         try:
             rows = table.findAll("tr", {"class": "diff-row evTabRow bc"})
         except Exception as e:
-            print(f"No odds rows found: {e}")
+            logger.warning(f"No odds rows found: {e}")
             return {}
         return {
             row["data-bname"]: mean(Odds._compile(row))
@@ -40,9 +44,9 @@ class Odds:
             response.raise_for_status()
             return response
         except HTTPError as e:
-            print(f"HTTP error occurred: {e}")
+            logger.error(f"HTTP error: {e}")
         except Exception as e:
-            print(f"Other error occurred: {e}")
+            logger.error(f"Other error: {e}")
 
     @classmethod
     def _compile(cls, row: BeautifulSoup) -> list[Decimal]:
@@ -50,8 +54,3 @@ class Odds:
             Decimal(col["data-odig"])
             for col in row.findAll("td", {"class": "bc bs oi"})
         ]
-
-
-if __name__ == "__main__":
-    o = Odds.scrape("wimbledon", "mens")
-    [print(f"{k} - {float(v)}") for k, v in o.items()]
