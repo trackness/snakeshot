@@ -1,4 +1,3 @@
-import json
 import os
 
 print("Loading function")
@@ -15,6 +14,7 @@ def lambda_handler(event, context):
             "headers": {"Content-Type": "application/json"},
             "body": f"[{json_region}] Anwar just seems like such an odd name for a girl dog. "
             f"Best girl on the island regardless.",
+            # TODO : Body goes here as json
         }
 
     except Exception as e:
