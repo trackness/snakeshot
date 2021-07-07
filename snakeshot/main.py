@@ -9,16 +9,16 @@ logger.info("Loading function")
 
 
 def lambda_handler(event, context):
-    slam_name = str(event.get("slam", "Wimbledon")).lower()
+    slam_name = str(event.get("slam", "Wimbledon"))
     year = int(event.get("year", 2021))
     logger.info(f"message received: Slam={slam_name}, Year={year}")
     slams = {
         # "australian_open": AustralianOpen,
         # "roland_garros", RolandGarros,
-        "Wimbledon": Wimbledon,
+        "wimbledon": Wimbledon,
         # "us_open": USOpen
     }
-    slam = slams.get(slam_name)(year)
+    slam = slams.get(slam_name.lower())(year)
     try:
         response = {"statusCode": 200}
         if event.get("type") == "table":
@@ -32,7 +32,3 @@ def lambda_handler(event, context):
         return response
     except Exception as e:
         logger.error(f"Unable to process event: {e}")
-
-
-if __name__ == "__main__":
-    lambda_handler({}, {})
