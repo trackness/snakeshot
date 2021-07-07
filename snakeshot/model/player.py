@@ -19,17 +19,16 @@ class Player:
         self._entry_type: str = entry_type
         self._odds: Decimal = Decimal(9999)
 
-    def __dict__(self):
+    def __dict__(self) -> dict:
         return {
-            self.full_name: {
-                "first_name": self._first_name,
-                "last_name": self._last_name,
-                "nationality": self._nationality,
-                "rank": self._rank if self._rank != 9999 else None,
-                "seed": self._seed,
-                "entry_type": self._entry_type,
-                "odds": self._odds,
-            }
+            "full": self.full_name,
+            "first_name": self._first_name,
+            "last_name": self._last_name,
+            "nationality": self._nationality,
+            "rank": self._rank if self._rank != 9999 else None,
+            "seed": self._seed,
+            "entry_type": self._entry_type,
+            "odds": self._odds,
         }
 
     @classmethod

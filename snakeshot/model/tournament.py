@@ -16,6 +16,9 @@ class Tournament:
         if len(self._rounds[-1].winners) != 1:
             raise Exception("more than one winner")
 
+    def __dict__(self) -> dict[int, Round]:
+        return {idx: rnd.__dict__ for idx, rnd in enumerate(self._rounds)}
+
     @classmethod
     def _players_to_matches(cls, players: list[Player]) -> list[Match]:
         # return [Match(list(pair)) for pair in zip(players[0::2], players[1::2])]
