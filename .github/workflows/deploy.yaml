@@ -60,7 +60,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          pip -q install poetry${{ env.POETRY_VERSION }}
+          pip -q install poetry
           poetry build --format wheel
           pip install ./dist/snakeshot-0.1.0-py3-none-any.whl -t ldist
 #          cd ldist && zip lambda * -r
