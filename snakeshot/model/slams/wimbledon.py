@@ -6,10 +6,10 @@ from loguru import logger
 
 class Wimbledon(Slam):
     def __init__(self, year: int, depth: int = 1000):
-        self._name = "Wimbledon"
-        logger.info(f"Generating tournament for {self._name} {year}")
+        name = "Wimbledon"
+        logger.info(f"Generating tournament for {name} {year}")
         self._base_url = f"https://www.wimbledon.com/en_GB/scores/feeds/{year}/draws"
-        super().__init__(depth)
+        super().__init__(name, depth)
 
     @classmethod
     def _tour(cls, tour: str) -> str:
@@ -47,7 +47,7 @@ class Wimbledon(Slam):
             player.seed = team.get("seed")
         if team.get("entryStatus"):
             player.entry_type = team.get("entryStatus")
-        Slam._log_draw_player(player)
+        logger.info(f"Found: {player.summary('draw')}")
         return player
 
 

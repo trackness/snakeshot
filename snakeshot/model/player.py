@@ -88,3 +88,27 @@ class Player:
     @odds.setter
     def odds(self, value: Decimal):
         self._odds: Decimal = value
+
+    def summary(self, t: str) -> str:
+        return {
+            "draw": self._summary_draw,
+            "tour": self._summary_tour,
+            "odds": self._summary_odds,
+        }.get(t)()
+
+    def _summary_draw(self):
+        if self._seed is not None:
+            prefix = f"({self._seed:2})"
+        elif self._entry_type is not None:
+            prefix = f"({self._entry_type:>2})"
+        else:
+            prefix = "    "
+        return f"{prefix} {self.full_name}"
+
+    def _summary_tour(self):
+        prefix = f"({self._rank:2})" if self._rank is not None else "    "
+        return f"{prefix} {self.full_name}"
+
+    def _summary_odds(self):
+        prefix = f"({float(self._odds):2.20})" if self._odds is not None else "       "
+        return f"{prefix} {self.full_name}"

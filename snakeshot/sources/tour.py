@@ -1,4 +1,5 @@
 import csv
+from loguru import logger
 
 import requests as requests
 
@@ -28,9 +29,6 @@ class Tour:
             self._tour = "atp"
         if tour.lower() == "womens":
             self._tour = "wta"
-        # else:
-        #     # TODO : custom logging / exceptions
-        #     raise Exception(f"invalid tour: '{tour}'")
         self._players: list[Player] = self._build_players()
 
     @property
@@ -58,6 +56,7 @@ class Tour:
         }
 
     def _url_to_dict(self, target: str, key: str) -> dict[str, dict]:
+        logger.info(f"Loading {self._tour.upper()} {target}")
         url = f"https://raw.githubusercontent.com/JeffSackmann/tennis_{self._tour}/master/{self._tour}_{target}.csv"
         results = list(
             csv.DictReader(

@@ -12,7 +12,8 @@ from snakeshot.model.tournament import Tournament
 
 
 class Slam(ABC):
-    def __init__(self, depth: int = 500):
+    def __init__(self, name: str, depth: int = 500):
+        self._name = name
         self._depth = depth
         self._tournaments: dict[str, Tournament] = {
             tour: Tournament(self._players(tour)) for tour in ["Mens", "Womens"]
@@ -20,16 +21,6 @@ class Slam(ABC):
 
     def __dict__(self) -> dict[str, dict]:
         return {tour: t.__dict__() for tour, t in self._tournaments.items()}
-
-    @classmethod
-    def _log_draw_player(cls, p: Player):
-        if p.seed is not None:
-            prefix = f"({p.seed:2})"
-        elif p.entry_type is not None:
-            prefix = f"({p.entry_type:>2})"
-        else:
-            prefix = "    "
-        logger.info(f"Found: {prefix} {p.full_name}")
 
     @property
     def tournaments(self) -> dict[str, Tournament]:
@@ -66,6 +57,7 @@ class Slam(ABC):
         for p in player_pool:
             if p.full_name == competitor.full_name:
                 competitor.rank = p.rank
+                Slam._log_rank_match("direct", competitor)
                 return
         match_name = process.extractOne(
             competitor.full_name, [p.full_name for p in player_pool]
@@ -73,6 +65,11 @@ class Slam(ABC):
         competitor.rank = next(
             p for p in player_pool if p.full_name == match_name[0]
         ).rank
+        Slam._log_rank_match("fuzzy", competitor)
+
+    @classmethod
+    def _log_rank_match(cls, method: str, player: Player) -> None:
+        logger.info(f"Matched {method:6}: {player.summary('tour')}")
 
     @classmethod
     def _add_odds(cls, competitors: list[Player], player: str, odds: Decimal) -> None:
