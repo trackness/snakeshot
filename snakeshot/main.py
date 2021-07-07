@@ -14,7 +14,6 @@ def lambda_handler(event, context):
         # "us_open": USOpen
     }
     slam = slams.get(str(event.get("slam")).lower(), Wimbledon)(2021)
-    # print(slam.tournaments.keys())
     try:
         response = {"statusCode": 200}
         if event.get("type") == "table":
