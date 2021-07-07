@@ -9,10 +9,6 @@ from snakeshot.utils.session import get_session
 
 
 class Odds:
-    _USER_AGENT = (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0"
-    )
-
     @classmethod
     def scrape(cls, slam: str, tour: str) -> dict[str, Decimal]:
         tour = tour.lower()
@@ -30,7 +26,7 @@ class Odds:
 
     @classmethod
     def _get_source(cls, url: str) -> str:
-        session: Session = get_session(headers={"User-Agent": Odds._USER_AGENT})
+        session: Session = get_session()
         try:
             response = session.get(url)
             response.raise_for_status()

@@ -30,7 +30,7 @@ class Slam(ABC):
         competitors: list[Player] = self._load_draw(tour)
         player_pool: list[Player] = Tour(tour, self._depth).players
         [Slam._add_rank(c, player_pool) for c in competitors]
-        odds: dict[str, Decimal] = Odds.scrape(self._name.lower(), tour)
+        odds: dict[str, Decimal] = Odds.scrape(tour, self._name.lower())
         [Slam._add_odds(competitors, *o) for o in odds.items()]
         return competitors
 

@@ -19,4 +19,14 @@ def get_session(headers=None) -> Session:
     )
     if headers:
         session.headers = headers
+    else:
+        session.headers = {
+            "Accept": "text/html",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/90.0.4430.93 Safari/537.36",
+        }
     return session
