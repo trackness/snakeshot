@@ -14,7 +14,6 @@ resource "aws_lambda_function" "lambda" {
     variables = {
       APP_NAME    = var.app_name
       OWNER       = var.owner
-      ENVIRONMENT = var.environment
       REGION      = var.region
       LOG_LEVEL   = var.log_level
       VERSION     = var.tag == "" ? var.commit : var.tag
