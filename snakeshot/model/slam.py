@@ -11,8 +11,7 @@ from snakeshot.model.tournament import Tournament
 
 
 class Slam(ABC):
-    def __init__(self, name: str, depth: int = 500):
-        self._name = name
+    def __init__(self, depth: int = 500):
         self._depth = depth
         self._tournaments: dict[str, Tournament] = {
             tour: Tournament(self._players(tour)) for tour in ["Mens", "Womens"]

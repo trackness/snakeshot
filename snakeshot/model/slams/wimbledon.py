@@ -1,23 +1,28 @@
 from snakeshot.model.player import Player
 from snakeshot.model.slam import Slam
 
+from loguru import logger
+
 
 class Wimbledon(Slam):
     def __init__(self, year: int, depth: int = 1000):
+        self._name = "Wimbledon"
+        logger.info(f"Generating tournament for {self._name} {year}")
         self._base_url = f"https://www.wimbledon.com/en_GB/scores/feeds/{year}/draws"
-        super().__init__("Wimbledon", depth)
+        super().__init__(depth)
 
     @classmethod
     def _tour(cls, tour: str) -> str:
         return {"Mens": "MS", "Womens": "LS"}.get(tour)
 
     def _load_draw(self, tour: str) -> list[Player]:
+        logger.info(f"Loading players from {self._name} website")
         matches: list[dict] = self._matches_json(tour)
         players = []
-        for i, match in enumerate(matches):
+        for i, m in enumerate(matches):
             [
                 players.insert(
-                    i * 2 + p, Wimbledon._team_to_player(match.get(f"team{p + 1}"))
+                    i * 2 + p, Wimbledon._team_to_player(m.get(f"team{p + 1}"))
                 )
                 for p in range(2)
             ]
@@ -36,13 +41,15 @@ class Wimbledon(Slam):
         player = Player(
             first_name=team.get("firstNameA"),
             last_name=team.get("lastNameA"),
-            # display_name=team.get("displayNameA"),
             nationality=team.get("nationA"),
         )
         if team.get("seed"):
             player.seed = team.get("seed")
         if team.get("entryStatus"):
             player.entry_type = team.get("entryStatus")
+        logger.info(
+            f"Found: {player.full_name}{f' ({player.seed})' if player.seed is not None else ''}"
+        )
         return player
 
 
