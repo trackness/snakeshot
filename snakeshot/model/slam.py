@@ -5,7 +5,6 @@ from urllib.error import HTTPError
 import requests as requests
 from fuzzywuzzy import process
 
-from snakeshot.sources.odds import Odds
 from snakeshot.model.player import Player
 from snakeshot.sources.tour import Tour
 from snakeshot.model.tournament import Tournament
@@ -30,8 +29,8 @@ class Slam(ABC):
         competitors: list[Player] = self._load_draw(tour)
         player_pool: list[Player] = Tour(tour, self._depth).players
         [Slam._add_rank(c, player_pool) for c in competitors]
-        odds: dict[str, Decimal] = Odds.scrape(tour, self._name.lower())
-        [Slam._add_odds(competitors, *o) for o in odds.items()]
+        # odds: dict[str, Decimal] = Odds.scrape(tour, self._name.lower())
+        # [Slam._add_odds(competitors, *o) for o in odds.items()]
         return competitors
 
     @abstractmethod
