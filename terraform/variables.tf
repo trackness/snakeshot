@@ -48,7 +48,7 @@ variable "tag" {
 
 variable "log_level" {
   type    = string
-  default = "error"
+  default = "info"
 }
 
 variable "memory_size" {
