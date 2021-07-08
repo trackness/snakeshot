@@ -52,27 +52,27 @@ class Odds:
         except Exception as e:
             logger.warning(f"No odds rows found: {e}")
 
-    def _from_rows(self, rows) -> dict[str, Decimal]:
-        odds = {}
-        for row in rows:
+    def _from_rows(self, _rows) -> dict[str, Decimal]:
+        _odds = {}
+        for _row in _rows:
             try:
-                player_odds = Odds._from_row(row)
-                if player_odds is not None:
-                    odds.update(player_odds)
+                _player_odds = Odds._from_row(_row)
+                if _player_odds is not None:
+                    _odds.update(_player_odds)
             except Exception as e:
                 logger.warning(f"Unable to generate {self._tour} odds: {e}")
-        return odds
+        return _odds
 
     @classmethod
-    def _from_row(cls, row) -> dict[str, Decimal]:
-        name = row["data-bname"]
+    def _from_row(cls, _row) -> dict[str, Decimal]:
+        _name = _row["data-bname"]
         try:
-            columns = row.findAll("td", {"class": "bc bs oi"})
-            if len(columns) != 0:
+            _columns = _row.findAll("td", {"class": "bc bs oi"})
+            if len(_columns) != 0:
                 return {
-                    name: mean([Decimal(column["data-odig"]) for column in columns])
+                    _name: mean([Decimal(_column["data-odig"]) for _column in _columns])
                 }
             else:
-                logger.warning(f"No odds columns found for {name}")
+                logger.warning(f"No odds columns found for {_name}")
         except Exception as e:
-            logger.warning(f"Unable to generate odds for {name}: {e}")
+            logger.warning(f"Unable to generate odds for {_name}: {e}")
