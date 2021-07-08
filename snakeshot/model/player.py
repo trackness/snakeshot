@@ -10,14 +10,15 @@ class Player:
         rank: int = None,
         seed: int = None,
         entry_type: str = None,
+        odds: Decimal = None,
     ):
         self._first_name: str = first_name
         self._last_name: str = last_name
         self._nationality: str = nationality
-        self._rank: int = rank if rank is not None else 9999
-        self._seed: int = seed
-        self._entry_type: str = entry_type
-        self._odds: Decimal = Decimal(9999)
+        self._rank: int = Player._validate_rank(rank)
+        self._seed: int = Player._validate_seed(seed)
+        self._entry_type: str = Player._validate_entry_type(entry_type)
+        self._odds: Decimal = Player._validate_odds(odds)
 
     def __dict__(self) -> dict:
         return {
@@ -28,7 +29,7 @@ class Player:
                 "rank": self._rank,
                 "seed": self._seed,
                 "entry_type": self._entry_type,
-                "odds": float(self._odds) if self._rank != Decimal(9999) else None,
+                "odds": self._odds,
             }
         }
 
@@ -63,7 +64,11 @@ class Player:
 
     @rank.setter
     def rank(self, value: int):
-        self._rank = value
+        self._rank = Player._validate_rank(value)
+
+    @classmethod
+    def _validate_rank(cls, value) -> int:
+        return value if isinstance(value, int) and value >= 1 else None
 
     @property
     def seed(self) -> int:
@@ -71,7 +76,11 @@ class Player:
 
     @seed.setter
     def seed(self, value: int):
-        self._seed = value
+        self._seed = Player._validate_seed(value)
+
+    @classmethod
+    def _validate_seed(cls, value) -> int:
+        return value if isinstance(value, int) and 1 <= value <= 32 else None
 
     @property
     def entry_type(self) -> str:
@@ -79,15 +88,30 @@ class Player:
 
     @entry_type.setter
     def entry_type(self, value: str):
-        self._entry_type = value
+        self._entry_type = Player._validate_entry_type(value)
+
+    @classmethod
+    def _validate_entry_type(cls, value) -> str:
+        return value if isinstance(value, str) and value in ["LL", "Q", "WC"] else None
 
     @property
     def odds(self) -> Decimal:
         return self._odds
 
     @odds.setter
-    def odds(self, value: Decimal):
-        self._odds: Decimal = value
+    def odds(self, value):
+        self._odds: Decimal = Player._validate_odds(value)
+
+    @classmethod
+    def _validate_odds(cls, value):
+        if isinstance(value, Decimal):
+            return value if value > 0 else None
+        elif isinstance(value, float):
+            return Decimal.from_float(value) if value > 0 else None
+        elif isinstance(value, int):
+            return Decimal(value) if value > 0 else None
+        else:
+            return None
 
     def summary(self, t: str) -> str:
         return {

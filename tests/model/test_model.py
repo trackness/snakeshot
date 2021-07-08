@@ -8,22 +8,6 @@ from snakeshot.model.slam import Slam
 from snakeshot.model.tournament import Tournament
 
 
-class TestPlayer:
-    def test_odds(self):
-        player = Player("A", "B", "ABC", 1)
-        player.odds = 1.5
-        player.odds = 3.0
-        assert player.odds == 2.25
-
-    def test_qualifier(self):
-        player = Player.qualifier()
-        assert player.first_name == "Q"
-        assert player.last_name == "Q"
-        assert player.full_name == "Q Q"
-        assert player.nationality == "-Q-"
-        assert player.rank == 999
-
-
 class TestMatch:
     @pytest.fixture
     def p1(self):
