@@ -29,7 +29,7 @@ class Player:
                 "rank": self._rank,
                 "seed": self._seed,
                 "entry_type": self._entry_type,
-                "odds": self._odds,
+                "odds": None if self._odds is None else float(self._odds),
             }
         }
 

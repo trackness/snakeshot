@@ -1,4 +1,5 @@
 import json
+import sys
 
 from snakeshot.model.slams.wimbledon import Wimbledon
 from snakeshot.utils.printer import Printer
@@ -22,9 +23,13 @@ def lambda_handler(event, context):
     try:
         response = {"statusCode": 200}
         if event.get("type") == "table":
-            logger.info(f"Generating table for {slam_name} {year}")
+            logger.info(f"Generating tables for {slam_name} {year}")
+            tables = Printer.table(slam.tournaments)
+            for t in tables.values():
+                for row in t:
+                    print(row)
             response.update({"headers": {"Content-Type": "text/html"}})
-            response.update({"body": Printer.table(slam.tournaments)})
+            response.update({"body": tables})
         else:
             logger.info(f"Generating json for {slam_name} {year}")
             response.update({"headers": {"Content-Type": "application/json"}})
@@ -40,4 +45,7 @@ def lambda_handler(event, context):
 
 
 if __name__ == "__main__":
-    draw = lambda_handler({}, {}).get("body")
+    logger.remove()
+    logger.add(sys.stderr, level="INFO")
+    json_outcome = lambda_handler({}, {}).get("body")
+    # table = lambda_handler({"type": "table"}, {}).get("body")

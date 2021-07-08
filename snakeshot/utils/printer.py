@@ -13,22 +13,22 @@ class Printer:
 
     @classmethod
     def _table_tournament(cls, tour: str, t: Tournament):
-        widths = {"t": 6, "r": 1, "m": 2, "p": 28}
+        widths = {"t": 6, "r": 1, "m": 2, "p": 33}
         result: list[str] = [*Printer._table_header(widths)]
-        for r in t.rounds:
-            if r.idx != 0:
+        for r_idx, r in enumerate(t.rounds):
+            if r_idx != 0:
                 result.append(Printer._table_divider("round", widths))
-            n_m: int = 2 ** (6 - r.idx)
-            for m in r.matches:
+            n_m: int = 2 ** (6 - r_idx)
+            for m_idx, m in enumerate(r.matches):
                 result.append(
                     Printer._table_line(
                         {
                             "t": tour,
-                            "r": r.idx + 1,
-                            "m": f"{m.idx + 1:{widths.get('m')}} / {n_m:{widths.get('m')}}",
-                            "p1": m.players[0].full_name,
-                            "p2": m.players[1].full_name,
-                            "pw": m.winner_expected.full_name,
+                            "r": r_idx + 1,
+                            "m": f"{m_idx + 1:{widths.get('m')}} / {n_m:{widths.get('m')}}",
+                            "p1": m.players[0].summary("draw"),
+                            "p2": m.players[1].summary("draw"),
+                            "pw": m.winner_expected.summary("draw"),
                         },
                         widths,
                     )

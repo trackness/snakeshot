@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Union
 
 from snakeshot.model.player import Player
@@ -5,8 +6,7 @@ from snakeshot.model.player import Player
 
 # TODO : Change to two players instead of list, just for init
 class Match:
-    def __init__(self, idx: int, players: list[Player]):
-        self._idx = idx
+    def __init__(self, players: list[Player]):
         self._players: list[Player] = players
         self._winner_expected: int = self._set_winner_expected()
 
@@ -17,10 +17,6 @@ class Match:
         }
 
     @property
-    def idx(self) -> int:
-        return self._idx
-
-    @property
     def players(self) -> list[Player]:
         return self._players
 
@@ -29,7 +25,17 @@ class Match:
         return self._players[self._winner_expected]
 
     def _set_winner_expected(self) -> int:
-        if self._players[0].odds == self._players[1].odds:
-            return 0 if self._players[0].rank < self._players[1].rank else 1
+        odds = [Decimal(Match._max_if_missing(player.odds)) for player in self._players]
+        rank = [Match._max_if_missing(player.rank) for player in self._players]
+        if odds[0] == odds[1]:
+            return Match._index_of_min(rank)
         else:
-            return 0 if self._players[0].odds < self._players[1].odds else 1
+            return Match._index_of_min(odds)
+
+    @classmethod
+    def _max_if_missing(cls, value):
+        return 9999 if value is None else value
+
+    @classmethod
+    def _index_of_min(cls, values: list) -> int:
+        return values.index(min(values))
