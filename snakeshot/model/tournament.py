@@ -7,14 +7,15 @@ from snakeshot.model.round import Round
 
 class Tournament:
     def __init__(self, players: list[Player]):
-        self._n_rounds: int = round(math.log2(len(players)))
         self._rounds: list[Round] = []
-        self._rounds.insert(0, Round(Tournament._players_to_matches(players)))
-        for i in range(1, self._n_rounds):
-            winners: list[Player] = self._rounds[i - 1].winners
-            self._rounds.insert(i, Round(Tournament._players_to_matches(winners)))
-        if len(self._rounds[-1].winners) != 1:
-            raise TournamentWinnerCountException(self._rounds[-1])
+        try:
+            self._n_rounds: int = round(math.log2(len(players)))
+            self._rounds.insert(0, Round(Tournament._players_to_matches(players)))
+            for i in range(1, self._n_rounds):
+                winners: list[Player] = self._rounds[i - 1].winners
+                self._rounds.insert(i, Round(Tournament._players_to_matches(winners)))
+        except Exception:
+            raise PlayerCountNotValid(len(players))
 
     def __dict__(self) -> dict[int, dict]:
         return {idx: r.__dict__() for idx, r in enumerate(self._rounds)}
@@ -31,8 +32,7 @@ class Tournament:
         return self._rounds
 
 
-class TournamentWinnerCountException(Exception):
-    def __init__(self, final_round: Round):
-        self._winner_count = len(final_round.winners)
-        self._message = f"Expected 1 winner, instead got {self._winner_count}"
+class PlayerCountNotValid(Exception):
+    def __init__(self, player_count: int):
+        self._message = f"Player count not a power of 2: {player_count}"
         super().__init__(self._message)
