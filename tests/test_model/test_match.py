@@ -1,27 +1,32 @@
+from decimal import Decimal
+
 import pytest as pytest
+from pytest import param
 
 from snakeshot.model.match import Match
 from snakeshot.model.player import Player
 
 
 class TestMatch:
-    @pytest.fixture
-    def p1(self):
-        return Player("A", "B", "ABC", 1)
+    @pytest.mark.parametrize(
+        "p1_stats, p2_stats, expected",
+        [
+            param([1, None], [2, None], 0, id="rank only"),
+            param([1, 2], [2, 1], 1, id="odds"),
+            param([1, 2], [2, 2], 0, id="equal odds"),
+        ],
+    )
+    def test_winner_expected(self, p1_stats, p2_stats, expected):
+        p1 = Player("Nick", "Kyrgios", "AUS", rank=p1_stats[0], odds=p1_stats[1])
+        p2 = Player("Dennis", "Shapovalov", "CAN", rank=p2_stats[0], odds=p2_stats[1])
+        match: Match = Match(p1, p2)
+        assert match.winner_expected == match.players[expected]
 
-    @pytest.fixture
-    def p2(self):
-        return Player("A", "B", "ABC", 2)
-
-    def test_winner_odds(self, p1, p2):
-        p1.odds = 2
-        p2.odds = 1
-        assert Match([p1, p2]).winner_expected == p2
-
-    def test_winner_odds_equal(self, p1, p2):
-        p1.odds = 1
-        p2.odds = 1
-        assert Match([p1, p2]).winner_expected == p1
-
-    def test_winner_rank(self, p1, p2):
-        assert Match([p1, p2]).winner_expected == p1
+    def test_dict(self):
+        p1 = Player("Nick", "Kyrgios", "AUS", rank=1, odds=Decimal(2))
+        p2 = Player("Dennis", "Shapovalov", "CAN", rank=2, odds=Decimal(1))
+        match: Match = Match(p1, p2)
+        assert match.__dict__() == {
+            "players": {0: p1.__dict__(), 1: p2.__dict__()},
+            "winner": p2.__dict__(),
+        }

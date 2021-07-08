@@ -6,8 +6,8 @@ from snakeshot.model.player import Player
 
 # TODO : Change to two players instead of list, just for init
 class Match:
-    def __init__(self, players: list[Player]):
-        self._players: list[Player] = players
+    def __init__(self, p1: Player, p2: Player):
+        self._players: list[Player] = [p1, p2]
         self._winner_expected: int = self._set_winner_expected()
 
     def __dict__(self) -> dict[str, Union[dict[int, dict], dict]]:
