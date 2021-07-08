@@ -84,7 +84,7 @@ class Slam(ABC):
         )
 
     def _add_odds(self, tour: str, competitors: list[Player]):
-        odds: dict[str, Decimal] = Odds.scrape(self._name, tour)
+        odds: dict[str, Decimal] = Odds(self._name, tour).odds
         logger.info(f"Assigning {tour} odds")
         [Slam._add_odd(tour, competitors, *o) for o in odds.items()]
 

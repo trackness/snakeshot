@@ -10,36 +10,33 @@ from snakeshot.utils.session import get_session
 
 
 class Odds:
-    @classmethod
-    def scrape(cls, slam: str, tour: str) -> dict[str, Decimal]:
-        url = (
+    def __init__(self, slam: str, tour: str):
+        self._slam = slam
+        self._tour = tour
+        self._url = (
             f"https://www.oddschecker.com/tennis/"
-            f"{slam.lower()}/{tour.lower()}/{tour.lower()}-{slam.lower()}/winner"
+            f"{self._slam.lower()}/{self._tour.lower()}/"
+            f"{self._tour.lower()}-{self._slam.lower()}/winner"
         )
-        logger.info(f"Scraping {tour} odds from {url}")
-        response: str = Odds._get_source(url)
+        logger.info(f"Scraping {self._tour} odds from {self._url}")
+        response: str = self._get_source()
         if response == "" or response is None:
-            return {}
-        soup: BeautifulSoup = BeautifulSoup(response, "html.parser")
-        try:
-            rows = soup.findAll("tr", {"class": "diff-row evTabRow bc"})
-        except Exception as e:
-            logger.warning(f"No odds rows found: {e}")
-            return {}
-        if len(rows) != 0:
-            return {
-                row["data-bname"]: mean(Odds._compile(row))
-                for row in rows
-                if len(Odds._compile(row)) != 0
-            }
-        else:
-            return {}
+            self._odds = {}
+            return
+        rows = Odds._find_rows(response)
+        if len(rows) == 0 or rows is None:
+            self._odds = {}
+            return
+        self._odds = self._from_rows(rows)
 
-    @classmethod
-    def _get_source(cls, url: str) -> str:
+    @property
+    def odds(self):
+        return self._odds if self._odds is not None else {}
+
+    def _get_source(self) -> str:
         session: Session = get_session()
         try:
-            response: Response = session.get(url)
+            response: Response = session.get(self._url)
             response.raise_for_status()
             return response.text
         except HTTPError as e:
@@ -48,8 +45,34 @@ class Odds:
             logger.error(f"Other error: {e}")
 
     @classmethod
-    def _compile(cls, row: BeautifulSoup) -> list[Decimal]:
-        return [
-            Decimal(col["data-odig"])
-            for col in row.findAll("td", {"class": "bc bs oi"})
-        ]
+    def _find_rows(cls, source: str):
+        try:
+            soup: BeautifulSoup = BeautifulSoup(source, "html.parser")
+            return soup.findAll("tr", {"class": "diff-row evTabRow bc"})
+        except Exception as e:
+            logger.warning(f"No odds rows found: {e}")
+
+    def _from_rows(self, rows) -> dict[str, Decimal]:
+        odds = {}
+        try:
+            for row in rows:
+                player_odds = Odds._from_row(row)
+                if player_odds is not None:
+                    odds.update(player_odds)
+        except Exception as e:
+            logger.warning(f"Unable to generate {self._tour} odds: {e}")
+        return odds
+
+    @classmethod
+    def _from_row(cls, row) -> dict[str, Decimal]:
+        name = row["data-bname"]
+        try:
+            columns = row.findAll("td", {"class": "bc bs oi"})
+            if len(columns) != 0:
+                return {
+                    name: mean([Decimal(column["data-odig"]) for column in columns])
+                }
+            else:
+                logger.warning(f"No odds columns found for {name}")
+        except Exception as e:
+            logger.warning(f"Unable to generate odds for {name}: {e}")
