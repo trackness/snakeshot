@@ -54,13 +54,13 @@ class Odds:
 
     def _from_rows(self, _rows) -> dict[str, Decimal]:
         _odds = {}
-        for _row in _rows:
-            try:
-                _player_odds = Odds._from_row(_row)
-                if _player_odds is not None:
-                    _odds.update(_player_odds)
-            except Exception as e:
-                logger.warning(f"Unable to generate {self._tour} odds: {e}")
+        # for _row in _rows:
+        #     try:
+        #         _player_odds = Odds._from_row(_row)
+        #         if _player_odds is not None:
+        #             _odds.update(_player_odds)
+        #     except Exception as e:
+        #         logger.warning(f"Unable to generate {self._tour} odds: {e}")
         return _odds
 
     @classmethod
