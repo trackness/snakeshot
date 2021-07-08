@@ -67,7 +67,7 @@ class Odds:
     def _from_row(cls, _row) -> dict[str, Decimal]:
         _name = _row["data-bname"]
         try:
-            _columns = _row.findAll("td", {"class": "bc bs oi"})
+            _columns = _row.findAll("td", {"class": "bc"})
             if len(_columns) != 0:
                 return {
                     _name: mean([Decimal(_column["data-odig"]) for _column in _columns])
