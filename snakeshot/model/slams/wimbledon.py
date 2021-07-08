@@ -9,6 +9,9 @@ class Wimbledon(Slam):
         name = "Wimbledon"
         logger.info(f"Generating tournament for {name} {year}")
         self._base_url = f"https://www.wimbledon.com/en_GB/scores/feeds/{year}/draws"
+        self._index_url = f"{self._base_url}/draws.json"
+        logger.info(f"Loading {name} draw index from {self._index_url}")
+        self._index: list = Slam._request_json(self._index_url).get("draws")
         super().__init__(name, depth)
 
     @classmethod
@@ -16,7 +19,6 @@ class Wimbledon(Slam):
         return {"Mens": "MS", "Womens": "LS"}.get(tour)
 
     def _load_draw(self, tour: str) -> list[Player]:
-        logger.info(f"Loading {tour} {self._name} players")
         matches: list[dict] = self._matches_json(tour)
         players = []
         for i, m in enumerate(matches):
@@ -29,10 +31,10 @@ class Wimbledon(Slam):
         return players
 
     def _matches_json(self, tour) -> list[dict]:
-        index: list = Slam._request_json(f"{self._base_url}/draws.json").get("draws")
         draw_url: str = next(
-            t for t in index if t.get("id") == Wimbledon._tour(tour)
+            t for t in self._index if t.get("id") == Wimbledon._tour(tour)
         ).get("feed_url")
+        logger.info(f"Loading {tour} {self._name} players from {draw_url}")
         draw_json: dict = Slam._request_json(draw_url)
         return draw_json.get("matches")[:64]
 
