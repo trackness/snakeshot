@@ -120,7 +120,7 @@ class Player:
             "odds": self._summary_odds,
         }.get(t)()
 
-    def _summary_draw(self):
+    def _summary_draw(self) -> str:
         if self._seed is not None:
             prefix = f"({self._seed:2})"
         elif self._entry_type is not None:
@@ -129,10 +129,10 @@ class Player:
             prefix = "    "
         return f"{prefix} {self.full_name}"
 
-    def _summary_tour(self):
-        prefix = f"({self._rank:3})" if self._rank is not None else "    "
+    def _summary_tour(self) -> str:
+        prefix = f"({self._rank:3})" if self._rank is not None else "     "
         return f"{prefix} {self.full_name}"
 
-    def _summary_odds(self):
-        prefix = f"({self._odds:6.2f})" if self._odds is not None else "       "
+    def _summary_odds(self) -> str:
+        prefix = f"({self._odds:6.2f})" if self._odds is not None else "        "
         return f"{prefix} {self.full_name}"
