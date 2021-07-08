@@ -22,7 +22,7 @@ class Tournament:
     @classmethod
     def _players_to_matches(cls, players: list[Player]) -> list[Match]:
         return [
-            Match([players[i * 2], players[i * 2 + 1]])
+            Match(players[i * 2], players[i * 2 + 1])
             for i in range(round(len(players) / 2))
         ]
 
