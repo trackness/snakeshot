@@ -14,14 +14,13 @@ class Tournament:
             winners: list[Player] = self._rounds[i - 1].winners
             self._rounds.insert(i, Round(i, Tournament._players_to_matches(winners)))
         if len(self._rounds[-1].winners) != 1:
-            raise Exception("more than one winner")
+            raise TournamentWinnerCountException(self._rounds[-1])
 
     def __dict__(self) -> dict[int, dict]:
         return {idx: r.__dict__() for idx, r in enumerate(self._rounds)}
 
     @classmethod
     def _players_to_matches(cls, players: list[Player]) -> list[Match]:
-        # return [Match(list(pair)) for pair in zip(players[0::2], players[1::2])]
         return [
             Match(i, [players[i * 2], players[i * 2 + 1]])
             for i in range(round(len(players) / 2))
@@ -30,3 +29,10 @@ class Tournament:
     @property
     def rounds(self) -> list[Round]:
         return self._rounds
+
+
+class TournamentWinnerCountException(Exception):
+    def __init__(self, final_round: Round):
+        self._winner_count = len(final_round.winners)
+        self._message = f"Expected 1 winner, instead got {self._winner_count}"
+        super().__init__(self._message)

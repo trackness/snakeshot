@@ -102,4 +102,4 @@ class Slam(ABC):
 
     @classmethod
     def _odds_match(cls, tour: str, method: str, player: Player) -> str:
-        return f"{tour} odds " f"{f'({method})':7}: " f"{player.summary('odds')}"
+        return f"{tour} odds {f'({method})':7}: {player.summary('odds')}"

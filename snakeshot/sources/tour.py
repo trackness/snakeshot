@@ -29,11 +29,11 @@ class Tour:
             self._tour = "atp"
         if tour.lower() == "womens":
             self._tour = "wta"
-        self._players: list[Player] = self._build_players()
+        self._tour_players: list[Player] = self._build_players()
 
     @property
     def players(self):
-        return self._players
+        return self._tour_players
 
     def _build_players(self) -> list[Player]:
         rankings: dict = self._url_to_dict(Tour._RANKINGS, Tour._RID)

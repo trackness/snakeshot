@@ -1,4 +1,3 @@
-import json
 from string import Template
 
 from snakeshot.model.tournament import Tournament
@@ -82,7 +81,3 @@ class Printer:
             p2=f"{values.get('p2'):{widths.get('p')}}",
             pw=f"{values.get('pw'):{widths.get('p')}}",
         )
-
-    @classmethod
-    def json(cls, slam: dict[str, Tournament]) -> json:
-        pass
