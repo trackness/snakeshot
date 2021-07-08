@@ -10,6 +10,8 @@ logger.info("Loading function")
 
 
 def lambda_handler(event, context):
+    logger.remove()
+    logger.add(sys.stderr, level="INFO")
     slam_name = str(event.get("slam", "Wimbledon"))
     year = int(event.get("year", 2021))
     logger.info(f"message received: Slam={slam_name}, Year={year}")
