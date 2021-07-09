@@ -1,27 +1,20 @@
 import json
-import sys
-
-from snakeshot.model.slams.wimbledon import Wimbledon
-from snakeshot.utils.printer import Printer
 
 from loguru import logger
+
+from snakeshot.model.slam import Slam
+from snakeshot.utils.printer import Printer
 
 logger.info("Loading function")
 
 
 def lambda_handler(event, context):
-    logger.remove()
-    logger.add(sys.stderr, level="INFO")
+    # logger.remove()
+    # logger.add(sys.stderr, level="INFO")
     slam_name = str(event.get("slam", "Wimbledon"))
     year = int(event.get("year", 2021))
     logger.info(f"message received: Slam={slam_name}, Year={year}")
-    slams = {
-        # "australian_open": AustralianOpen,
-        # "roland_garros", RolandGarros,
-        "wimbledon": Wimbledon,
-        # "us_open": USOpen
-    }
-    slam = slams.get(slam_name.lower())(year)
+    slam = Slam(slam_name, year, depth=1000)
     try:
         response = {"statusCode": 200}
         if event.get("type") == "table":
@@ -47,7 +40,5 @@ def lambda_handler(event, context):
 
 
 if __name__ == "__main__":
-    logger.remove()
-    logger.add(sys.stderr, level="INFO")
-    json_outcome = lambda_handler({}, {}).get("body")
-    # table = lambda_handler({"type": "table"}, {}).get("body")
+    # json_outcome = lambda_handler({}, {}).get("body")
+    table = lambda_handler({"type": "table"}, {}).get("body")

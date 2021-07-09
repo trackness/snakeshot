@@ -16,7 +16,6 @@ class Odds:
             f"{self._slam.lower()}/{self._tour.lower()}/"
             f"{self._tour.lower()}-{self._slam.lower()}/winner"
         )
-        logger.info(f"Scraping {self._tour} odds from {self._url}")
         response = session.get(self._url, description=f"{self._tour} odds").text
         if response == "" or response is None:
             self._odds = {}
