@@ -13,33 +13,33 @@ class Tour:
     def __init__(self, tour: str, depth: int):
         self._depth = depth
         self._tour = tour.lower()
-        self._tour_players: dict[str, int] = self._build_tour_players()
+        self._tour_players: dict = self._build_tour_players()
 
     @property
     def players(self):
         return self._tour_players
 
-    def _build_tour_players(self) -> dict[str, int]:
+    def _build_tour_players(self) -> dict:
         players = self._players_dict()
         rankings = self._rankings_dict()
         return Tour._sort_dict_by_value(
             {players.get(player_id): ranking for player_id, ranking in rankings.items()}
         )
 
-    def _players_dict(self) -> dict[int, str]:
+    def _players_dict(self) -> dict:
         return {
             int(player.get("id")): Tour._full_name(player)
             for player in self._target_to_list("players")
         }
 
-    def _rankings_dict(self) -> dict[int, int]:
+    def _rankings_dict(self) -> dict:
         return {
             int(ranking.get("id")): int(ranking.get("ranking"))
             for ranking in self._target_to_list("rankings_current")
             if int(ranking.get("ranking")) <= self._depth
         }
 
-    def _target_to_list(self, target) -> list[dict]:
+    def _target_to_list(self, target) -> list:
         response = session.get(self._url(target), f"{self._tour} {target}", stream=True)
         return Tour._response_to_dict(target, response)
 
@@ -64,5 +64,5 @@ class Tour:
         return f"{player.get('first_name')} {player.get('last_name')}"
 
     @classmethod
-    def _sort_dict_by_value(cls, d: dict[str, int]) -> dict[str, int]:
+    def _sort_dict_by_value(cls, d: dict) -> dict:
         return {k: v for k, v in sorted(d.items(), key=operator.itemgetter(1))}

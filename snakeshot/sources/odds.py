@@ -38,7 +38,7 @@ class Odds:
         except Exception as e:
             logger.warning(f"No odds rows found: {e}")
 
-    def _from_rows(self, _rows) -> dict[str, Decimal]:
+    def _from_rows(self, _rows) -> dict:
         _odds = {}
         for _row in _rows:
             try:
@@ -50,7 +50,7 @@ class Odds:
         return _odds
 
     @classmethod
-    def _from_row(cls, _row) -> dict[str, Decimal]:
+    def _from_row(cls, _row) -> dict:
         _name = _row["data-bname"]
         try:
             _columns = _row.findAll("td", {"class": "bc"})
