@@ -1,12 +1,10 @@
 from decimal import Decimal
 from statistics import mean
-from urllib.error import HTTPError
 from loguru import logger
 
 from bs4 import BeautifulSoup
-from requests import Session, Response
 
-from snakeshot.utils.session import get_session
+from snakeshot.utils import session
 
 
 class Odds:
@@ -19,7 +17,7 @@ class Odds:
             f"{self._tour.lower()}-{self._slam.lower()}/winner"
         )
         logger.info(f"Scraping {self._tour} odds from {self._url}")
-        response: str = self._get_source()
+        response = session.get(self._url, description=f"{self._tour} odds").text
         if response == "" or response is None:
             self._odds = {}
             return
@@ -32,17 +30,6 @@ class Odds:
     @property
     def odds(self):
         return self._odds if self._odds is not None else {}
-
-    def _get_source(self) -> str:
-        session: Session = get_session()
-        try:
-            response: Response = session.get(self._url)
-            response.raise_for_status()
-            return response.text
-        except HTTPError as e:
-            logger.error(f"HTTP error: {e}")
-        except Exception as e:
-            logger.error(f"Other error: {e}")
 
     @classmethod
     def _find_rows(cls, source: str):
