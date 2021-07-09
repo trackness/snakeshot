@@ -5,7 +5,7 @@ from snakeshot.model.tournament import Tournament
 
 class Printer:
     @classmethod
-    def table(cls, slam: dict[str, Tournament]) -> dict[str, list[str]]:
+    def table(cls, slam: dict) -> dict:
         return {
             tour: Printer._table_tournament(tour, tournament)
             for tour, tournament in slam.items()
@@ -14,7 +14,7 @@ class Printer:
     @classmethod
     def _table_tournament(cls, tour: str, t: Tournament):
         widths = {"t": 6, "r": 1, "m": 2, "p": 33}
-        result: list[str] = [*Printer._table_header(widths)]
+        result: list = [*Printer._table_header(widths)]
         for r_idx, r in enumerate(t.rounds):
             if r_idx != 0:
                 result.append(Printer._table_divider("round", widths))
@@ -37,7 +37,7 @@ class Printer:
         return result
 
     @classmethod
-    def _table_header(cls, widths: dict) -> list[str]:
+    def _table_header(cls, widths: dict) -> list:
         return [
             Printer._table_divider("head_upper", widths),
             Printer._table_line(
