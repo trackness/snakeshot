@@ -17,5 +17,5 @@ class Slam:
         return {tour: t.as_dict() for tour, t in self._tournaments.items()}
 
     @property
-    def tournaments(self) -> dict[str, Tournament]:
+    def tournaments(self) -> dict:
         return self._tournaments

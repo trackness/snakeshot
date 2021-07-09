@@ -8,7 +8,7 @@ from snakeshot.model.round import Round
 class TestRound:
     # TODO : refactor this down to minimum
     @pytest.fixture
-    def players(self) -> list[Player]:
+    def players(self) -> list:
         return [
             Player("A", "B", "ABC", 1),
             Player("A", "B", "ABC", 2),

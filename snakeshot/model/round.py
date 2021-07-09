@@ -11,9 +11,9 @@ class Round:
         return {idx: m.as_dict() for idx, m in enumerate(self._matches)}
 
     @property
-    def winners(self) -> list[Player]:
+    def winners(self) -> list:
         return self._winners
 
     @property
-    def matches(self) -> list[Match]:
+    def matches(self) -> list:
         return self._matches

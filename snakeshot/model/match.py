@@ -16,7 +16,7 @@ class Match:
         }
 
     @property
-    def players(self) -> list[Player]:
+    def players(self) -> list:
         return self._players
 
     @property

@@ -46,7 +46,7 @@ class Tournament:
         return {idx: r.as_dict() for idx, r in enumerate(self._rounds)}
 
     @property
-    def rounds(self) -> list[Round]:
+    def rounds(self) -> list:
         return self._rounds
 
     def _populate_rounds(self, players: list[Player]):
@@ -56,14 +56,14 @@ class Tournament:
             self._rounds.insert(i, Round(Tournament._players_to_matches(winners)))
 
     @classmethod
-    def _players_to_matches(cls, players: list[Player]) -> list[Match]:
+    def _players_to_matches(cls, players: list[Player]) -> list:
         return [
             Match(players[i * 2], players[i * 2 + 1])
             for i in range(round(len(players) / 2))
         ]
 
     @classmethod
-    def _draw(cls, players: dict, ranks: dict, odds: dict) -> list[Player]:
+    def _draw(cls, players: dict, ranks: dict, odds: dict) -> list:
         result: list[Player] = []
         for full_name, details in players.items():
             result.append(
