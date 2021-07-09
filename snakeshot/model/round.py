@@ -3,7 +3,7 @@ class Round:
         self._matches: list = matches
         self._winners: list = [match.winner_expected for match in self._matches]
 
-    def as_dict(self) -> dict[int, dict]:
+    def as_dict(self) -> dict:
         return {idx: m.as_dict() for idx, m in enumerate(self._matches)}
 
     @property

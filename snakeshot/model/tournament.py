@@ -22,9 +22,7 @@ class Tournament:
     _assoc = {"Mens": "ATP", "Womens": "WTA"}
 
     def __init__(self, slam: str, year: int, gender: str, depth: int):
-        players: dict[str, dict] = Tournament._slams.get(slam.lower())(
-            year, gender
-        ).players
+        players: dict = Tournament._slams.get(slam.lower())(year, gender).players
         self._rounds: list = []
         n_players = len(players)
         if not (n_players > 0 and (n_players & (n_players - 1))):
@@ -42,7 +40,7 @@ class Tournament:
             )
         )
 
-    def as_dict(self) -> dict[int, dict]:
+    def as_dict(self) -> dict:
         return {idx: r.as_dict() for idx, r in enumerate(self._rounds)}
 
     @property
