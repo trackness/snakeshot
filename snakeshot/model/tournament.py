@@ -25,7 +25,7 @@ class Tournament:
         players: dict[str, dict] = Tournament._slams.get(slam.lower())(
             year, gender
         ).players
-        self._rounds: list[Round] = []
+        self._rounds: list = []
         n_players = len(players)
         if not (n_players > 0 and (n_players & (n_players - 1))):
             self._n_rounds: int = int(math.log2(len(players)))
@@ -49,14 +49,14 @@ class Tournament:
     def rounds(self) -> list:
         return self._rounds
 
-    def _populate_rounds(self, players: list[Player]):
+    def _populate_rounds(self, players: list):
         self._rounds.insert(0, Round(Tournament._players_to_matches(players)))
         for i in range(1, self._n_rounds):
-            winners: list[Player] = self._rounds[i - 1].winners
+            winners: list = self._rounds[i - 1].winners
             self._rounds.insert(i, Round(Tournament._players_to_matches(winners)))
 
     @classmethod
-    def _players_to_matches(cls, players: list[Player]) -> list:
+    def _players_to_matches(cls, players: list) -> list:
         return [
             Match(players[i * 2], players[i * 2 + 1])
             for i in range(round(len(players) / 2))
@@ -64,7 +64,7 @@ class Tournament:
 
     @classmethod
     def _draw(cls, players: dict, ranks: dict, odds: dict) -> list:
-        result: list[Player] = []
+        result: list = []
         for full_name, details in players.items():
             result.append(
                 Player(

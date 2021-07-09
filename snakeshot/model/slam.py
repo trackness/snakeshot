@@ -8,7 +8,7 @@ class Slam:
         self._name = name
         self._year = year
         self._depth = depth
-        self._tournaments: dict[str, Tournament] = {
+        self._tournaments: dict = {
             gender: Tournament(name, year, gender, depth)
             for gender in ["Mens", "Womens"]
         }

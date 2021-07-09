@@ -1,11 +1,8 @@
-import json
 from abc import ABC, abstractmethod
 
 from snakeshot.utils import session
 
 from requests import Response
-
-from loguru import logger
 
 
 class Draw(ABC):
