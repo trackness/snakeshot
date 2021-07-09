@@ -9,6 +9,7 @@ logger.info("Loading function")
 
 
 def lambda_handler(event, context):
+    # TODO : reimplement debug logging
     # logger.remove()
     # logger.add(sys.stderr, level="INFO")
     slam_name = str(event.get("slam", "Wimbledon"))

@@ -95,7 +95,7 @@ class TestTournament:
                                 "first_name": "Novak",
                                 "last_name": "Djokovic",
                                 "nationality": "SRB",
-                                "odds": 1.2725,
+                                "odds": 1.28,
                                 "rank": 1,
                                 "seed": 1,
                             }
@@ -118,7 +118,7 @@ class TestTournament:
                             "first_name": "Novak",
                             "last_name": "Djokovic",
                             "nationality": "SRB",
-                            "odds": 1.2725,
+                            "odds": 1.28,
                             "rank": 1,
                             "seed": 1,
                         }
@@ -171,7 +171,7 @@ class TestTournament:
                                 "first_name": "Novak",
                                 "last_name": "Djokovic",
                                 "nationality": "SRB",
-                                "odds": 1.2725,
+                                "odds": 1.28,
                                 "rank": 1,
                                 "seed": 1,
                             }
@@ -194,7 +194,7 @@ class TestTournament:
                             "first_name": "Novak",
                             "last_name": "Djokovic",
                             "nationality": "SRB",
-                            "odds": 1.2725,
+                            "odds": 1.28,
                             "rank": 1,
                             "seed": 1,
                         }
