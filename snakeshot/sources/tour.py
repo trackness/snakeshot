@@ -1,72 +1,68 @@
 import csv
-from loguru import logger
+import operator
 
-import requests as requests
-
-from snakeshot.model.player import Player
+from snakeshot.utils import session
 
 
 class Tour:
-    _RANKINGS = "rankings_current"
-    _PLAYERS = "players"
-    _RID = "ranking"
-    _PID = "player_id"
     _fieldnames: dict = {
-        _RANKINGS: ["ranking_date", _RID, _PID, "ranking_points", "tours"],
-        _PLAYERS: [
-            _PID,
-            "first_name",
-            "last_name",
-            "hand",
-            "birth_date",
-            "country_code",
-        ],
+        "rankings_current": ["date", "ranking", "id", "points", "tours"],
+        "players": ["id", "first_name", "last_name", "hand", "b_day", "country"],
     }
 
     def __init__(self, tour: str, depth: int):
         self._depth = depth
-        if tour.lower() == "mens":
-            self._tour = "atp"
-        if tour.lower() == "womens":
-            self._tour = "wta"
-        self._tour_players: list[Player] = self._build_players()
+        self._tour = tour.lower()
+        self._tour_players: dict[str, int] = self._build_tour_players()
 
     @property
     def players(self):
         return self._tour_players
 
-    def _build_players(self) -> list[Player]:
-        rankings: dict = self._url_to_dict(Tour._RANKINGS, Tour._RID)
-        players: dict = self._url_to_dict(Tour._PLAYERS, Tour._PID)
-        return [
-            Player(
-                first_name=players.get(player).get("first_name"),
-                last_name=players.get(player).get("last_name"),
-                nationality=players.get(player).get("country_code"),
-                rank=rank,
-            )
-            for rank, player in self._limit_rankings(rankings).items()
-        ]
+    def _build_tour_players(self) -> dict[str, int]:
+        players = self._players_dict()
+        rankings = self._rankings_dict()
+        return Tour._sort_dict_by_value(
+            {players.get(player_id): ranking for player_id, ranking in rankings.items()}
+        )
 
-    def _limit_rankings(self, rankings: dict) -> dict[int, str]:
+    def _players_dict(self) -> dict[int, str]:
         return {
-            int(k): v.get(Tour._PID)
-            for k, v in rankings.items()
-            if int(k) <= self._depth
+            int(player.get("id")): Tour._full_name(player)
+            for player in self._target_to_list("players")
         }
 
-    def _url_to_dict(self, target: str, key: str) -> dict[str, dict]:
-        logger.info(f"Loading {self._tour.upper()} {target}")
-        url = f"https://raw.githubusercontent.com/JeffSackmann/tennis_{self._tour}/master/{self._tour}_{target}.csv"
-        results = list(
+    def _rankings_dict(self) -> dict[int, int]:
+        return {
+            int(ranking.get("id")): int(ranking.get("ranking"))
+            for ranking in self._target_to_list("rankings_current")
+            if int(ranking.get("ranking")) <= self._depth
+        }
+
+    def _target_to_list(self, target) -> list[dict]:
+        response = session.get(self._url(target), f"{self._tour} {target}", stream=True)
+        return Tour._response_to_dict(target, response)
+
+    @classmethod
+    def _response_to_dict(cls, target, content) -> list:
+        return list(
             csv.DictReader(
-                requests.get(url, stream=True).iter_lines(decode_unicode=True),
+                content.iter_lines(decode_unicode=True),
                 delimiter=",",
                 fieldnames=Tour._fieldnames.get(target),
             )
         )
-        return Tour._index_by(key, results)
+
+    def _url(self, target: str):
+        return (
+            f"https://raw.githubusercontent.com/JeffSackmann/tennis_"
+            f"{self._tour}/master/{self._tour}_{target}.csv"
+        )
 
     @classmethod
-    def _index_by(cls, key: str, l_d: list[dict]) -> dict[str, dict]:
-        return {e.get(key): {k: v for k, v in e.items() if k != key} for e in l_d}
+    def _full_name(cls, player: dict) -> str:
+        return f"{player.get('first_name')} {player.get('last_name')}"
+
+    @classmethod
+    def _sort_dict_by_value(cls, d: dict[str, int]) -> dict[str, int]:
+        return {k: v for k, v in sorted(d.items(), key=operator.itemgetter(1))}

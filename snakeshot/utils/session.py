@@ -2,6 +2,8 @@ import requests
 from requests import Session
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
+from loguru import logger
+from requests import HTTPError, Response
 
 
 def get_session(headers=None) -> Session:
@@ -30,3 +32,22 @@ def get_session(headers=None) -> Session:
             "Chrome/90.0.4430.93 Safari/537.36",
         }
     return session
+
+
+def get(url, description=None, stream=False) -> Response:
+    session = get_session()
+    logger.info(
+        f"Fetching"
+        f"{f' {description} from' if description is not None else ''} "
+        f"{url}"
+    )
+    try:
+        response = session.get(url, stream=stream)
+        response.raise_for_status()
+        return response
+    except HTTPError as e:
+        logger.error(f"HTTP error: {e}")
+        return Response()
+    except Exception as e:
+        logger.error(f"Other error: {e}")
+        return Response()
