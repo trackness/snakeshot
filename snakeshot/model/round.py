@@ -7,8 +7,8 @@ class Round:
         self._matches: list[Match] = matches
         self._winners: list[Player] = [match.winner_expected for match in self._matches]
 
-    def __dict__(self) -> dict[int, dict]:
-        return {idx: m.__dict__() for idx, m in enumerate(self._matches)}
+    def as_dict(self) -> dict[int, dict]:
+        return {idx: m.as_dict() for idx, m in enumerate(self._matches)}
 
     @property
     def winners(self) -> list[Player]:

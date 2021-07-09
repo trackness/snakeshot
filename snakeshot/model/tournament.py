@@ -42,8 +42,8 @@ class Tournament:
             )
         )
 
-    def __dict__(self) -> dict[int, dict]:
-        return {idx: r.__dict__() for idx, r in enumerate(self._rounds)}
+    def as_dict(self) -> dict[int, dict]:
+        return {idx: r.as_dict() for idx, r in enumerate(self._rounds)}
 
     @property
     def rounds(self) -> list[Round]:

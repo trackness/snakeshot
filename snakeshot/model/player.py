@@ -20,7 +20,7 @@ class Player:
         self._entry_type: str = Player._validate_entry_type(entry_type)
         self._odds: Decimal = Player._validate_odds(odds)
 
-    def __dict__(self) -> dict:
+    def as_dict(self) -> dict:
         return {
             self.full_name: {
                 "first_name": self._first_name,

@@ -29,7 +29,7 @@ def lambda_handler(event, context):
         else:
             logger.info(f"Generating json for {slam_name} {year}")
             response.update({"headers": {"Content-Type": "application/json"}})
-            response.update({"body": json.dumps(slam.__dict__())})
+            response.update({"body": json.dumps(slam.as_dict())})
         return response
     except Exception as e:
         logger.error(f"Unable to process event: {e}")
@@ -40,6 +40,7 @@ def lambda_handler(event, context):
         }
 
 
-if __name__ == "__main__":
-    # json_outcome = lambda_handler({}, {}).get("body")
-    table = lambda_handler({"type": "table"}, {}).get("body")
+# if __name__ == "__main__":
+#     json_outcome = lambda_handler({}, {}).get("body")
+#     print(json.dumps(json_outcome, indent=2))
+#     table = lambda_handler({"type": "table"}, {}).get("body")

@@ -13,8 +13,8 @@ class Slam:
             for gender in ["Mens", "Womens"]
         }
 
-    def __dict__(self) -> dict[str, dict]:
-        return {tour: t.__dict__() for tour, t in self._tournaments.items()}
+    def as_dict(self) -> dict[str, dict]:
+        return {tour: t.as_dict() for tour, t in self._tournaments.items()}
 
     @property
     def tournaments(self) -> dict[str, Tournament]:

@@ -26,7 +26,7 @@ class TestMatch:
         p1 = Player("Nick", "Kyrgios", "AUS", rank=1, odds=Decimal(2))
         p2 = Player("Dennis", "Shapovalov", "CAN", rank=2, odds=Decimal(1))
         match: Match = Match(p1, p2)
-        assert match.__dict__() == {
-            "players": {0: p1.__dict__(), 1: p2.__dict__()},
-            "winner": p2.__dict__(),
+        assert match.as_dict() == {
+            "players": {0: p1.as_dict(), 1: p2.as_dict()},
+            "winner": p2.as_dict(),
         }

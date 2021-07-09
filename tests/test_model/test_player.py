@@ -37,7 +37,7 @@ class TestPlayer:
 
     def test_dict(self, basic_player_values):
         player = Player(**basic_player_values, rank=5, seed=3, odds=Decimal(3.5))
-        assert player.__dict__() == {
+        assert player.as_dict() == {
             "Nick Kyrgios": {
                 "first_name": "Nick",
                 "last_name": "Kyrgios",

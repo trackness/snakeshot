@@ -10,10 +10,10 @@ class Match:
         self._players: list[Player] = [p1, p2]
         self._winner_expected: int = self._set_winner_expected()
 
-    def __dict__(self) -> dict[str, Union[dict[int, dict], dict]]:
+    def as_dict(self) -> dict[str, Union[dict[int, dict], dict]]:
         return {
-            "players": {idx: p.__dict__() for idx, p in enumerate(self._players)},
-            "winner": self.winner_expected.__dict__(),
+            "players": {idx: p.as_dict() for idx, p in enumerate(self._players)},
+            "winner": self.winner_expected.as_dict(),
         }
 
     @property

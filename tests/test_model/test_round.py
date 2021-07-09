@@ -24,9 +24,9 @@ class TestRound:
     def test_dict(self, players):
         m1: Match = Match(players[0], players[1])
         m2: Match = Match(players[2], players[3])
-        assert Round([m1, m2]).__dict__() == {
-            0: m1.__dict__(),
-            1: m2.__dict__(),
+        assert Round([m1, m2]).as_dict() == {
+            0: m1.as_dict(),
+            1: m2.as_dict(),
         }
 
     def test_matches(self, players):

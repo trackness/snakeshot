@@ -85,7 +85,7 @@ class TestTournament:
             "snakeshot.model.tournament.Wimbledon.players", dict(**p1, **p2, **p3, **p4)
         )
         under_test: Tournament = Tournament("Wimbledon", 2021, "Mens", depth=1000)
-        assert under_test.__dict__() == {
+        assert under_test.as_dict() == {
             0: {
                 0: {
                     "players": {
