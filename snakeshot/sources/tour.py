@@ -16,7 +16,7 @@ class Tour:
         self._tour_players: dict = self._build_tour_players()
 
     @property
-    def players(self):
+    def rankings(self):
         return self._tour_players
 
     def _build_tour_players(self) -> dict:

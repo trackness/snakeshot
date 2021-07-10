@@ -60,19 +60,40 @@ p4 = {
     }
 }
 
+players = {
+    "Novak Djokovic": {"seed": 1, "entry_type": None},
+    "Jack Draper": {"seed": None, "entry_type": "WC"},
+    "Marcelo Tomas Barrios Vera": {"seed": None, "entry_type": "Q"},
+    "Kevin Anderson": {"seed": None, "entry_type": None},
+}
+
+rankings = {
+    "Novak Djokovic": {"rank": 1},
+    "Jack Draper": {"rank": 253},
+    "Marcelo Tomas Barrios Vera": {"rank": 209},
+    "Kevin Anderson": {"rank": 102},
+}
+
+odds = {
+    "Novak Djokovic": {"odds": 1.2875},
+    "Jack Draper": {"odds": None},
+    "Marcelo Tomas Barrios Vera": {"odds": None},
+    "Kevin Anderson": {"odds": 770.0},
+}
+
 
 class TestTournament:
-    def test_rounds(self, mocker):
-        mocker.patch(
-            "snakeshot.model.tournament.Wimbledon.players", dict(**p1, **p2, **p3, **p4)
-        )
+    @pytest.fixture
+    def patch_loc(self):
+        return "snakeshot.model.tournament"
+
+    def test_rounds(self, mocker, patch_loc):
+        mocker.patch(f"{patch_loc}.Wimbledon.players", dict(**p1, **p2, **p3, **p4))
         under_test: Tournament = Tournament("Wimbledon", 2021, "Mens", depth=1000)
         assert len(under_test.rounds) == 2
 
-    def test_incorrect_player_count(self, mocker, loguru_caplog):
-        mocker.patch(
-            "snakeshot.model.tournament.Wimbledon.players", {0: {}, 1: {}, 2: {}}
-        )
+    def test_incorrect_player_count(self, mocker, patch_loc, loguru_caplog):
+        mocker.patch(f"{patch_loc}.Wimbledon.players", {0: {}, 1: {}, 2: {}})
         under_test: Tournament = Tournament("Wimbledon", 2021, "Mens", depth=1000)
         assert under_test.rounds == []
         assert (
@@ -80,125 +101,20 @@ class TestTournament:
             in loguru_caplog.text
         )
 
-    def test_dict(self, mocker):
-        mocker.patch(
-            "snakeshot.model.tournament.Wimbledon.players", dict(**p1, **p2, **p3, **p4)
-        )
+    def test_dict(self, mocker, patch_loc):
+        r_1 = {
+            0: {"players": {0: dict(**p1), 1: dict(**p2)}, "winner": dict(**p1)},
+            1: {"players": {0: dict(**p3), 1: dict(**p4)}, "winner": dict(**p4)},
+        }
+        r_2 = {
+            0: {"players": {0: dict(**p1), 1: dict(**p4)}, "winner": dict(**p1)},
+        }
+        mocker.patch(f"{patch_loc}.Wimbledon.players", dict(**p1, **p2, **p3, **p4))
+        mocker.patch(f"{patch_loc}.Tour.rankings", {})
+        mocker.patch(f"{patch_loc}.Odds.odds", {})
+        mocker.patch(f"{patch_loc}.Round.as_dict", side_effect=[r_1, r_2])
         under_test: Tournament = Tournament("Wimbledon", 2021, "Mens", depth=1000)
         assert under_test.as_dict() == {
-            0: {
-                0: {
-                    "players": {
-                        0: {
-                            "Novak Djokovic": {
-                                "entry_type": None,
-                                "first_name": "Novak",
-                                "last_name": "Djokovic",
-                                "nationality": "SRB",
-                                "odds": 1.28,
-                                "rank": 1,
-                                "seed": 1,
-                            }
-                        },
-                        1: {
-                            "Jack Draper": {
-                                "entry_type": "WC",
-                                "first_name": "Jack",
-                                "last_name": "Draper",
-                                "nationality": "GBR",
-                                "odds": None,
-                                "rank": 253,
-                                "seed": None,
-                            }
-                        },
-                    },
-                    "winner": {
-                        "Novak Djokovic": {
-                            "entry_type": None,
-                            "first_name": "Novak",
-                            "last_name": "Djokovic",
-                            "nationality": "SRB",
-                            "odds": 1.28,
-                            "rank": 1,
-                            "seed": 1,
-                        }
-                    },
-                },
-                1: {
-                    "players": {
-                        0: {
-                            "Marcelo Tomas Barrios Vera": {
-                                "entry_type": "Q",
-                                "first_name": "Marcelo Tomas",
-                                "last_name": "Barrios Vera",
-                                "nationality": "CHI",
-                                "odds": None,
-                                "rank": 209,
-                                "seed": None,
-                            }
-                        },
-                        1: {
-                            "Kevin Anderson": {
-                                "entry_type": None,
-                                "first_name": "Kevin",
-                                "last_name": "Anderson",
-                                "nationality": "RSA",
-                                "odds": 770.0,
-                                "rank": 102,
-                                "seed": None,
-                            }
-                        },
-                    },
-                    "winner": {
-                        "Kevin Anderson": {
-                            "entry_type": None,
-                            "first_name": "Kevin",
-                            "last_name": "Anderson",
-                            "nationality": "RSA",
-                            "odds": 770.0,
-                            "rank": 102,
-                            "seed": None,
-                        }
-                    },
-                },
-            },
-            1: {
-                0: {
-                    "players": {
-                        0: {
-                            "Novak Djokovic": {
-                                "entry_type": None,
-                                "first_name": "Novak",
-                                "last_name": "Djokovic",
-                                "nationality": "SRB",
-                                "odds": 1.28,
-                                "rank": 1,
-                                "seed": 1,
-                            }
-                        },
-                        1: {
-                            "Kevin Anderson": {
-                                "entry_type": None,
-                                "first_name": "Kevin",
-                                "last_name": "Anderson",
-                                "nationality": "RSA",
-                                "odds": 770.0,
-                                "rank": 102,
-                                "seed": None,
-                            }
-                        },
-                    },
-                    "winner": {
-                        "Novak Djokovic": {
-                            "entry_type": None,
-                            "first_name": "Novak",
-                            "last_name": "Djokovic",
-                            "nationality": "SRB",
-                            "odds": 1.28,
-                            "rank": 1,
-                            "seed": 1,
-                        }
-                    },
-                },
-            },
+            0: r_1,
+            1: r_2,
         }

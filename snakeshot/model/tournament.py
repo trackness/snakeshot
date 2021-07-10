@@ -35,7 +35,7 @@ class Tournament:
         self._populate_rounds(
             Tournament._draw(
                 players,
-                Tour(Tournament._assoc.get(gender), depth).players,
+                Tour(Tournament._assoc.get(gender), depth).rankings,
                 Odds(slam, gender).odds,
             )
         )

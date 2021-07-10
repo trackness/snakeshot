@@ -48,5 +48,5 @@ class TestTour:
         response_setup(responses, assoc, "rankings_current")
 
         under_test: Tour = Tour(assoc, depth)
-        for rank in under_test.players.values():
+        for rank in under_test.rankings.values():
             assert rank <= depth
