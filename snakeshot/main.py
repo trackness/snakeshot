@@ -16,12 +16,11 @@ def lambda_handler(event, context):
     slam_name = str(event.get("slam", "Wimbledon"))
     year = int(event.get("year", 2021))
     logger.info(f"event received: Slam={slam_name}, Year={year}")
-    response = {"statusCode": 200}
+    response = {"statusCode": 200, "headers": {"Content-Type": "text/html"}}
     try:
         slam = Slam(slam_name, year, depth=1000)
     except Exception as e:
         logger.error(f"Unable to generate slam from event event: {e}")
-        response.update({"headers": {"Content-Type": "text/html"}})
         response.update({"body": e})
         return response
     try:
@@ -37,16 +36,15 @@ def lambda_handler(event, context):
                 )
             except Exception as e:
                 tables = e
-            response.update({"headers": {"Content-Type": "text/html"}})
             response.update({"body": tables})
     except Exception as e:
         logger.error(f"Unable to process event: {e}")
-        response.update({"headers": {"Content-Type": "text/html"}})
         response.update({"body": e})
     return response
 
 
-# if __name__ == "__name___main__":
-#     table = lambda_handler({}, {}).get("body")
+if __name__ == "___main__":
+    table = lambda_handler({}, {}).get("body")
+
 #     json_outcome = lambda_handler({"type": "table"}, {}).get("body")
 #     print(json.dumps(json_outcome, indent=2))
