@@ -60,27 +60,6 @@ p4 = {
     }
 }
 
-players = {
-    "Novak Djokovic": {"seed": 1, "entry_type": None},
-    "Jack Draper": {"seed": None, "entry_type": "WC"},
-    "Marcelo Tomas Barrios Vera": {"seed": None, "entry_type": "Q"},
-    "Kevin Anderson": {"seed": None, "entry_type": None},
-}
-
-rankings = {
-    "Novak Djokovic": {"rank": 1},
-    "Jack Draper": {"rank": 253},
-    "Marcelo Tomas Barrios Vera": {"rank": 209},
-    "Kevin Anderson": {"rank": 102},
-}
-
-odds = {
-    "Novak Djokovic": {"odds": 1.2875},
-    "Jack Draper": {"odds": None},
-    "Marcelo Tomas Barrios Vera": {"odds": None},
-    "Kevin Anderson": {"odds": 770.0},
-}
-
 
 class TestTournament:
     @pytest.fixture
@@ -114,7 +93,4 @@ class TestTournament:
         mocker.patch(f"{patch_loc}.Odds.odds", {})
         mocker.patch(f"{patch_loc}.Round.as_dict", side_effect=[r_1, r_2])
         under_test: Tournament = Tournament("Wimbledon", 2021, "Mens", depth=1000)
-        assert under_test.as_dict() == {
-            0: r_1,
-            1: r_2,
-        }
+        assert under_test.as_dict() == {0: r_1, 1: r_2}

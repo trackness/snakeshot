@@ -25,11 +25,13 @@ class Match:
 
     def _set_winner_expected(self) -> int:
         odds = [Decimal(Match._max_if_missing(player.odds)) for player in self._players]
-        rank = [Match._max_if_missing(player.rank) for player in self._players]
-        if odds[0] == odds[1]:
-            return Match._index_of_min(rank)
-        else:
+        if odds[0] != odds[1]:
             return Match._index_of_min(odds)
+        rank = [Match._max_if_missing(player.rank) for player in self._players]
+        if rank[0] != rank[1]:
+            return Match._index_of_min(rank)
+        names = [player.last_name for player in self._players]
+        return Match._index_of_min(names)
 
     @classmethod
     def _max_if_missing(cls, value):
