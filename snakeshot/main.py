@@ -45,6 +45,3 @@ def lambda_handler(event, context):
 
 if __name__ == "___main__":
     table = lambda_handler({}, {}).get("body")
-
-#     json_outcome = lambda_handler({"type": "table"}, {}).get("body")
-#     print(json.dumps(json_outcome, indent=2))
