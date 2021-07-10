@@ -3,7 +3,7 @@ import json
 from loguru import logger
 
 from snakeshot.model.slam import Slam
-from snakeshot.html import Renderer
+from snakeshot.response import Renderer
 from snakeshot.utils.printer import Printer
 
 logger.info("Loading function")
@@ -29,19 +29,17 @@ def lambda_handler(event, context):
             response.update({"headers": {"Content-Type": "application/json"}})
             response.update({"body": json.dumps(slam.as_dict())})
         else:
-            logger.info(f"Generating tables for {slam_name} {year}")
             try:
-                tables = Renderer.write(
-                    slam_name, year, Printer.table(slam.tournaments)
-                )
+                body = Renderer.write(slam_name, year, slam.as_dict())
             except Exception as e:
-                tables = e
-            response.update({"body": tables})
+                logger.error(f"Unable to generate html: {e}")
+                body = e
+            response.update({"body": body})
     except Exception as e:
         logger.error(f"Unable to process event: {e}")
         response.update({"body": e})
     return response
 
 
-if __name__ == "___main__":
-    table = lambda_handler({}, {}).get("body")
+if __name__ == "__main__":
+    lambda_handler(event={}, context={})

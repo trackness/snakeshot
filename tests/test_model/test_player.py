@@ -174,3 +174,15 @@ class TestPlayer:
         def test_odds(self, basic_player_values, odds, expected):
             player = Player(**basic_player_values, odds=odds)
             assert player.summary("odds") == expected
+
+        @pytest.mark.parametrize(
+            "details, expected",
+            [
+                param({}, "     AUS Nick Kyrgios", id="unseeded"),
+                param({"seed": 1}, "( 1) AUS Nick Kyrgios", id="seeded"),
+                param({"entry_type": "LL"}, "(LL) AUS Nick Kyrgios", id="lucky loser"),
+            ],
+        )
+        def test_table(self, basic_player_values, details, expected):
+            under_test = Player(**dict(basic_player_values), **dict(details))
+            assert under_test.summary("table") == expected
