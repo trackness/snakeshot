@@ -6,13 +6,13 @@ from loguru import logger
 
 class Renderer:
     @classmethod
-    def write(cls, template: str, name: str, year: int, slam: dict) -> str:
+    def write(cls, name: str, year: int, slam: dict) -> str:
         logger.info(f"Generating {name} {year} html tables")
 
         logger.debug("Loading template")
-        template: Template = Environment(
-            loader=FileSystemLoader("./templates")
-        ).get_template(f"{template}.html")
+        template: Template = Environment(loader=FileSystemLoader("./")).get_template(
+            "template.html"
+        )
 
         logger.debug("Making template substitutions")
         subs = template.render(title=f"{name} {year}", slam=slam)

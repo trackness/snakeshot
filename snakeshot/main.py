@@ -38,9 +38,7 @@ def snakeshot(name: str, year: int, response_type: str) -> dict:
             return failure(e, f"Unable to generate {name} {year} json")
     else:
         try:
-            return success(
-                "text/html", Renderer.write("bootstrap", name, year, slam_dict)
-            )
+            return success("text/html", Renderer.write(name, year, slam_dict))
         except Exception as e:
             return failure(e, f"Unable to generate {name} {year} html tables")
 
