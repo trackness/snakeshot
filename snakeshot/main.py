@@ -1,10 +1,10 @@
 import json
+from string import Template
 
 from loguru import logger
 
 from snakeshot.model.slam import Slam
 from snakeshot.response import Renderer
-from snakeshot.utils.printer import Printer
 
 logger.info("Loading function")
 
@@ -13,32 +13,43 @@ def lambda_handler(event, context):
     # TODO : reimplement debug logging
     # logger.remove()
     # logger.add(sys.stderr, level="INFO")
-    slam_name = str(event.get("slam", "Wimbledon"))
+    slam = str(event.get("slam", "Wimbledon"))
     year = int(event.get("year", 2021))
-    logger.info(f"event received: Slam={slam_name}, Year={year}")
-    response = {"statusCode": 200, "headers": {"Content-Type": "text/html"}}
+    logger.info(f"{slam} {year} event received")
+    return snakeshot(slam, year, str(event.get("response_type", "table")))
+
+
+def snakeshot(slam_name: str, year: int, response_type: str) -> dict:
     try:
         slam = Slam(slam_name, year, depth=1000)
     except Exception as e:
-        logger.error(f"Unable to generate slam from event event: {e}")
-        response.update({"body": e})
-        return response
+        return failure(e, f"Unable to generate {slam_name} {year} slam: {e}")
+
     try:
-        if event.get("type") == "json":
-            logger.info(f"Generating json for {slam_name} {year}")
-            response.update({"headers": {"Content-Type": "application/json"}})
-            response.update({"body": json.dumps(slam.as_dict())})
-        else:
-            try:
-                body = Renderer.write(slam_name, year, slam.as_dict())
-            except Exception as e:
-                logger.error(f"Unable to generate html: {e}")
-                body = e
-            response.update({"body": body})
+        slam_dict = slam.as_dict()
     except Exception as e:
-        logger.error(f"Unable to process event: {e}")
-        response.update({"body": e})
-    return response
+        return failure(e, f"Unable to generate {slam_name} {year} dict: {e}")
+
+    if response_type == "json":
+        try:
+            logger.info(f"Generating {slam_name} {year} json")
+            return success("application/json", json.dumps(slam_dict))
+        except Exception as e:
+            return failure(e, f"Unable to generate {slam_name} {year} json: {e}")
+    else:
+        try:
+            return success("text/html", Renderer.write(slam_name, year, slam_dict))
+        except Exception as e:
+            return failure(e, f"Unable to generate {slam_name} {year} html table: {e}")
+
+
+def success(content_type, body) -> dict:
+    return {"statusCode": 200, "headers": {"Content-Type": content_type}, "body": body}
+
+
+def failure(e: Exception, message: str) -> dict:
+    logger.error(message)
+    return {"statusCode": 500, "headers": {"Content-Type": "text/html"}, "body": e}
 
 
 if __name__ == "__main__":

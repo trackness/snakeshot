@@ -1,11 +1,13 @@
 from jinja2 import Template, Environment, FileSystemLoader
 
 from snakeshot.model.slam import Slam
+from loguru import logger
 
 
 class Renderer:
     @classmethod
     def write(cls, name: str, year: int, slam: dict) -> str:
+        logger.info(f"Generating {name} {year} html tables")
         subs = (
             Environment(loader=FileSystemLoader("./templates"))
             .get_template("template.html")
