@@ -23,26 +23,26 @@ def snakeshot(slam_name: str, year: int, response_type: str) -> dict:
     try:
         slam = Slam(slam_name, year, depth=1000)
     except Exception as e:
-        return failure(e, f"Unable to generate {slam_name} {year} slam: {e}")
+        return failure(e, f"Unable to generate {slam_name} {year} slam")
 
     try:
         slam_dict = slam.as_dict()
     except Exception as e:
-        return failure(e, f"Unable to generate {slam_name} {year} dict: {e}")
+        return failure(e, f"Unable to generate {slam_name} {year} dict")
 
     if response_type == "json":
         try:
             logger.info(f"Generating {slam_name} {year} json")
             return success("application/json", json.dumps(slam_dict))
         except Exception as e:
-            return failure(e, f"Unable to generate {slam_name} {year} json: {e}")
+            return failure(e, f"Unable to generate {slam_name} {year} json")
     else:
         try:
             return success(
                 "text/html", Renderer.write("bootstrap", slam_name, year, slam_dict)
             )
         except Exception as e:
-            return failure(e, f"Unable to generate {slam_name} {year} html tables: {e}")
+            return failure(e, f"Unable to generate {slam_name} {year} html tables")
 
 
 def success(content_type, body) -> dict:
@@ -50,7 +50,7 @@ def success(content_type, body) -> dict:
 
 
 def failure(e: Exception, message: str) -> dict:
-    logger.error(message)
+    logger.error(f"{message}: {type(e)} - {e}")
     return {"statusCode": 500, "headers": {"Content-Type": "text/html"}, "body": e}
 
 
