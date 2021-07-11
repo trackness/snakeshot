@@ -6,7 +6,15 @@ from loguru import logger
 from requests import HTTPError, Response
 
 
-def get_session(headers=None) -> Session:
+# def user_agents():
+#     agents = [
+#         "Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0",
+#         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+#     ]
+#     return agents[0]
+
+
+def get_session(add: dict, headers: dict) -> Session:
     session = requests.Session()
     session.mount(
         "https://",
@@ -19,10 +27,8 @@ def get_session(headers=None) -> Session:
             )
         ),
     )
-    if headers:
-        session.headers = headers
-    else:
-        session.headers = {
+    if headers is None:
+        headers = {
             "Accept": "text/html",
             "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
@@ -31,11 +37,17 @@ def get_session(headers=None) -> Session:
             "AppleWebKit/537.36 (KHTML, like Gecko) "
             "Chrome/90.0.4430.93 Safari/537.36",
         }
+    if add is not None:
+        headers.update(add)
+    [logger.debug(f"{k}: {v}") for k, v in headers.items()]
+    session.headers = headers
     return session
 
 
-def get(url, description=None, stream=False) -> Response:
-    session = get_session()
+def get(
+    url, description=None, stream=False, add: dict = None, headers: dict = None
+) -> Response:
+    session = get_session(add=add, headers=headers)
     logger.info(
         f"Fetching"
         f"{f' {description} from' if description is not None else ''} "

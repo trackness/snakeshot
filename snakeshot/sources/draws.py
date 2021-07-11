@@ -41,6 +41,7 @@ class Wimbledon(Draw):
             f"https://www.wimbledon.com/en_GB/scores/feeds/"
             f"{self._year}/draws/draws.json",
             f"{self._year} {self._name} draws list",
+            add=headers.get(self._name),
         )
         return dict(draw_list.json()).get("draws")
 
@@ -76,3 +77,6 @@ class Wimbledon(Draw):
                 "entry_type": team.get("entryStatus"),
             }
         }
+
+
+headers = {"Wimbledon": {"Host": "www.wimbledon.com"}}
