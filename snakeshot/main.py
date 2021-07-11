@@ -49,7 +49,7 @@ def success(content_type, body) -> dict:
 
 def failure(e: Exception, message: str) -> dict:
     logger.error(f"{message}: {type(e)} - {e}")
-    return {"statusCode": 500, "headers": {"Content-Type": "text/html"}, "body": e}
+    return {"statusCode": 500, "headers": {"Content-Type": "text/html"}, "body": str(e)}
 
 
 if __name__ == "__main__":
