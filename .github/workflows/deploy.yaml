@@ -64,6 +64,16 @@ jobs:
           poetry build --format wheel
           pip install ./dist/snakeshot-0.1.0-py3-none-any.whl -t ldist
 
+      - name: Zip
+        run: |
+          zip -r ${{ env.APP_NAME }}.zip ldist
+
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact
+          path: path/to/artifact/world.txt
+
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
