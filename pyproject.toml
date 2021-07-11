@@ -3,7 +3,7 @@ name = "snakeshot"
 version = "0.1.0"
 description = ""
 authors = ["trackness <40263851+trackness@users.noreply.github.com>"]
-include = ["snakeshot/template.html"]
+include = ["snakeshot/templates"]
 
 [tool.poetry.dependencies]
 python = "^3.8"

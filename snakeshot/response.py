@@ -12,12 +12,15 @@ class Renderer:
 
         logger.info("Loading template")
         template: Template = Environment(
-            loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "./"))
-        ).get_template("template.html")
+            loader=FileSystemLoader(
+                os.path.join(os.path.dirname(__file__), "templates")
+            )
+        ).get_template("tables.html")
 
         logger.info("Making template substitutions")
-        return template.render(title=f"{name} {year}", slam=slam)
+        # return template.render(title=f"{name} {year}", slam=slam)
 
-        # with open("index.html", "w") as f:
-        #     f.write(subs)
-        # return subs
+        subs = template.render(title=f"{name} {year}", slam=slam)
+        with open("index.html", "w") as f:
+            f.write(subs)
+        return subs
