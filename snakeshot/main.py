@@ -1,5 +1,5 @@
 import json
-from string import Template
+import sys
 
 from loguru import logger
 
@@ -11,8 +11,8 @@ logger.info("Loading function")
 
 def lambda_handler(event, context):
     # TODO : reimplement debug logging
-    # logger.remove()
-    # logger.add(sys.stderr, level="INFO")
+    logger.remove()
+    logger.add(sys.stderr, level="INFO")
     slam = str(event.get("slam", "Wimbledon"))
     year = int(event.get("year", 2021))
     logger.info(f"{slam} {year} event received")
@@ -38,9 +38,11 @@ def snakeshot(slam_name: str, year: int, response_type: str) -> dict:
             return failure(e, f"Unable to generate {slam_name} {year} json: {e}")
     else:
         try:
-            return success("text/html", Renderer.write(slam_name, year, slam_dict))
+            return success(
+                "text/html", Renderer.write("bootstrap", slam_name, year, slam_dict)
+            )
         except Exception as e:
-            return failure(e, f"Unable to generate {slam_name} {year} html table: {e}")
+            return failure(e, f"Unable to generate {slam_name} {year} html tables: {e}")
 
 
 def success(content_type, body) -> dict:

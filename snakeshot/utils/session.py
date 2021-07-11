@@ -6,14 +6,6 @@ from loguru import logger
 from requests import HTTPError, Response
 
 
-# def user_agents():
-#     agents = [
-#         "Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0",
-#         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
-#     ]
-#     return agents[0]
-
-
 def get_session(add: dict, headers: dict) -> Session:
     session = requests.Session()
     session.mount(
