@@ -19,30 +19,30 @@ def lambda_handler(event, context):
     return snakeshot(slam, year, str(event.get("response_type", "table")))
 
 
-def snakeshot(slam_name: str, year: int, response_type: str) -> dict:
+def snakeshot(name: str, year: int, response_type: str) -> dict:
     try:
-        slam = Slam(slam_name, year, depth=1000)
+        slam = Slam(name, year, depth=1000)
     except Exception as e:
-        return failure(e, f"Unable to generate {slam_name} {year} slam")
+        return failure(e, f"Unable to generate {name} {year} slam")
 
     try:
         slam_dict = slam.as_dict()
     except Exception as e:
-        return failure(e, f"Unable to generate {slam_name} {year} dict")
+        return failure(e, f"Unable to generate {name} {year} dict")
 
     if response_type == "json":
         try:
-            logger.info(f"Generating {slam_name} {year} json")
+            logger.info(f"Generating {name} {year} json")
             return success("application/json", json.dumps(slam_dict))
         except Exception as e:
-            return failure(e, f"Unable to generate {slam_name} {year} json")
+            return failure(e, f"Unable to generate {name} {year} json")
     else:
         try:
             return success(
-                "text/html", Renderer.write("bootstrap", slam_name, year, slam_dict)
+                "text/html", Renderer.write("bootstrap", name, year, slam_dict)
             )
         except Exception as e:
-            return failure(e, f"Unable to generate {slam_name} {year} html tables")
+            return failure(e, f"Unable to generate {name} {year} html tables")
 
 
 def success(content_type, body) -> dict:
