@@ -23,7 +23,7 @@ def lambda_handler(event, context):
 
 def validate_slam(event: dict) -> str:
     slam = event.get("queryStringParameters", {}).get(
-        "slam", event.get("requestContext", {}).get("http", {}).get("path", False)
+        "slam", event.get("rawPath", False)
     )
     return (
         slam if slam in ["aus_open", "roland_garros", "wimbledon", "us_open"] else False
