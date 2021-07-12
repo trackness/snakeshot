@@ -22,13 +22,13 @@ def lambda_handler(event, context):
 
 
 def validate_slam(event: dict) -> str:
-    slam = event.get("queryStringParameters", {}).get(
-        "slam", event.get("rawPath", False)
+    slam = (
+        event.get("queryStringParameters", {})
+        .get("slam", event.get("rawPath", False))
+        .replace("/", "")
     )
     return (
-        slam
-        if slam in ["/aus_open", "/roland_garros", "/wimbledon", "/us_open"]
-        else False
+        slam if slam in ["aus_open", "roland_garros", "wimbledon", "us_open"] else False
     )
 
 
