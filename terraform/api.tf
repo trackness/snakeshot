@@ -89,3 +89,11 @@ resource "aws_apigatewayv2_api_mapping" "mapping" {
   domain_name = aws_apigatewayv2_domain_name.api.id
   stage       = "$default"
 }
+
+resource "aws_apigatewayv2_integration" "slam" {
+  api_id      = aws_apigatewayv2_api.api.id
+  integration_type = "AWS_PROXY"
+
+  integration_uri = aws_lambda_function.lambda.invoke_arn
+  payload_format_version = "2.0"
+}
