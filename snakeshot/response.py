@@ -18,9 +18,9 @@ class Renderer:
         ).get_template("tables.html")
 
         logger.info("Making template substitutions")
-        # return template.render(title=f"{name} {year}", slam=slam)
+        return template.render(title=f"{name} {year}", slam=slam)
 
-        subs = template.render(title=f"{name} {year}", slam=slam)
-        with open("index.html", "w") as f:
-            f.write(subs)
-        return subs
+        # subs = template.render(title=f"{name} {year}", slam=slam)
+        # with open("index.html", "w") as f:
+        #     f.write(subs)
+        # return subs
