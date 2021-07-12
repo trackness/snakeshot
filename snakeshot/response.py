@@ -14,7 +14,8 @@ class Renderer:
         template: Template = Environment(
             loader=FileSystemLoader(
                 os.path.join(os.path.dirname(__file__), "templates")
-            )
+            ),
+            autoescape=True,
         ).get_template("tables.html")
 
         logger.info("Making template substitutions")
