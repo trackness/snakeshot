@@ -12,8 +12,10 @@ def lambda_handler(event=None, _context=None):
     # TODO : reimplement debug logging
     logger.remove()
     logger.add(sys.stderr, level="INFO")
-    print(json.dumps(event, indent=4))
-    # query_string_parameters = event
+    logger.info("### queryStringParameters ###")
+    [logger.info(f"{k}: {v}") for k, v in event.get("queryStringParameters", {})]
+    logger.info("### pathParameters ###")
+    [logger.info(f"{k}: {v}") for k, v in event.get("pathParameters", {})]
     slam = str(event.get("slam", "Wimbledon"))
     # slam = str(event.get("queryStringParameters", {}).get("slam", None))
     year = int(event.get("year", 2021))
