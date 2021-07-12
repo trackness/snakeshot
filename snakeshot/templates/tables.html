@@ -23,7 +23,7 @@
             <td>{{ m_idx + 1 }}</td>
             {% for player in match.get("players").values() %}
               {% for name, details in player.items() %}
-                <td>{{ name }}</td>
+                <td><img alt="{{ details.get('nationality') }}" src="https://www.usopen.org/images/flags/{{ details.get('nationality') }}_sm.gif">{{ name }}</td>
               {% endfor %}
             {% endfor %}
             {% for name, details in match.get("winner").items() %}
