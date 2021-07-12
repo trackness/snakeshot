@@ -8,7 +8,7 @@ from snakeshot.response import Response
 logger.info("Loading function")
 
 
-def lambda_handler(event, _context=None):
+def lambda_handler(event=None, _context=None):
     # TODO : reimplement debug logging
     logger.remove()
     logger.add(sys.stderr, level="INFO")

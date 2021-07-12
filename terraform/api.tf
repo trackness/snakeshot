@@ -92,7 +92,7 @@ resource "aws_apigatewayv2_api_mapping" "mapping" {
 
 resource "aws_apigatewayv2_integration" "slam" {
   api_id      = aws_apigatewayv2_api.api.id
-  integration_type = "AWS"
+  integration_type = "AWS_PROXY"
 
   payload_format_version = "2.0"
 }
