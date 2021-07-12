@@ -31,10 +31,6 @@ variable "region" {
   default = "eu-west-2"
 }
 
-variable "environment" {
-  type = string
-}
-
 variable "zip_target" {
   type    = string
   default = ""
@@ -52,7 +48,7 @@ variable "tag" {
 
 variable "log_level" {
   type    = string
-  default = "error"
+  default = "info"
 }
 
 variable "memory_size" {

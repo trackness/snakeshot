@@ -6,7 +6,6 @@ provider "aws" {
     tags = {
       Application = var.app_name
       Owner       = var.owner
-      Environment = var.environment
       Region      = var.region
       GitRepo     = var.repo
       ManagedBy   = "Terraform"

@@ -1,21 +1,23 @@
-import json
-import os
+import sys
 
-print("Loading function")
+from loguru import logger
+
+from snakeshot.response import Response
+
+logger.info("Loading function")
 
 
 def lambda_handler(event, context):
-    try:
-        # print(f"Received event: {json.dumps(event, indent=2)}")
-        # [print(f"value = {value}") for value in event]
-        # return event["key1"]  # Echo back the first key value
-        json_region = os.environ["AWS_REGION"]
-        return {
-            "statusCode": 200,
-            "headers": {"Content-Type": "application/json"},
-            "body": f"[{json_region}] Anwar just seems like such an odd name for a girl dog. "
-            f"Best girl on the island regardless.",
-        }
+    # TODO : reimplement debug logging
+    logger.remove()
+    logger.add(sys.stderr, level="INFO")
+    slam = str(event.get("slam", "Wimbledon"))
+    year = int(event.get("year", 2021))
+    response_type = str(event.get("response_type"))
+    logger.info(f"{slam} {year} event received")
+    content = Response(slam, year)
+    return content.as_json() if response_type == "json" else content.as_tables()
 
-    except Exception as e:
-        raise Exception(f"Something went wrong: {e}")
+
+if __name__ == "__main__":
+    lambda_handler(event={}, context={})

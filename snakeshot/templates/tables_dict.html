@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+{% block css %}
+  <style type="text/css">
+  
+  </style>
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block body %}
+  {% for gender, tournament in slam.items() %}
+    <h1>{{ gender }}</h1>
+    <table class="table table-bordered table-sm">
+      <tr>
+        <th>Round</th>
+        <th>Match</th>
+        <th>Player 1</th>
+        <th>Player 2</th>
+        <th>Winner</th>
+      </tr>
+      {% for r_idx, round in tournament.items() %}
+        {% for m_idx, match in round.items() %}
+          <tr>
+            <td>{{ r_idx + 1 }}</td>
+            <td>{{ m_idx + 1 }}</td>
+            {% for player in match.get("players").values() %}
+              {% for name, details in player.items() %}
+                <td><img alt="{{ details.get('nationality') }}" src="https://www.usopen.org/images/flags/{{ details.get('nationality') }}_sm.gif">{{ name }}</td>
+              {% endfor %}
+            {% endfor %}
+            {% for name, details in match.get("winner").items() %}
+              <td>{{ name }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      {% endfor %}
+    </table>
+  {% endfor %}
+{% endblock %}

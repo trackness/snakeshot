@@ -6,7 +6,6 @@ on:
 
 env:
   APP_NAME: "snakeshot"
-  PAK_NAME: "snakeshot"
   ENV: prod
   API_DOMAIN: "trackness.net"
   POETRY_VERSION: 1.1.6
@@ -14,37 +13,66 @@ env:
 
 jobs:
 
-  test:
-    name: Poetry Pytest
-    timeout-minutes: 5
-    runs-on: ubuntu-latest
-    env:
-      PYTHON_VERSION: 3.8
-
-    steps:
-
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Poetry Pytest
-        uses: trackness/gha/poetry-test@main
-        with:
-          poetry-version: ${{ env.POETRY_VERSION }}
+#  test:
+#    name: Poetry Pytest
+#    timeout-minutes: 5
+#    runs-on: ubuntu-latest
+#    env:
+#      PYTHON_VERSION: 3.8
+#
+#    steps:
+#
+#      - uses: actions/checkout@v2
+#
+#      - uses: actions/setup-python@v2
+#        with:
+#          python-version: ${{ env.PYTHON_VERSION }}
+#
+#      - name: Poetry Pytest
+#        uses: trackness/gha/poetry-test@main
+#        with:
+#          poetry-version: ${{ env.POETRY_VERSION }}
 
   deploy:
     name: Terraform Plan & Apply
     timeout-minutes: 10
     runs-on: ubuntu-latest
+#    TODO : depend on tests
     env:
+      PYTHON_VERSION: 3.8
       TF_WORKING_DIR: terraform
 
     steps:
 
       - name: Checkout repo
         uses: actions/checkout@v2
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+#      - name: Poetry build
+#        uses: trackness/gha/poetry-build@main
+#        with:
+#          poetry-version: ${{ env.POETRY_VERSION }}
+#          app-name: ${{ env.APP_NAME }}
+      - name: Build
+        shell: bash
+        run: |
+          pip -q install poetry
+          poetry build --format wheel
+          pip install ./dist/snakeshot-0.1.0-py3-none-any.whl -t ldist
+
+      - name: Zip
+        run: |
+          zip -r ${{ env.APP_NAME }}.zip ldist
+
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.APP_NAME }}
+          path: ${{ env.APP_NAME }}.zip
 
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -53,13 +81,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: ${{ env.APP_NAME }}
-
-      - name: Poetry build
-        uses: trackness/gha/poetry-build@main
-        with:
-          poetry-version: ${{ env.POETRY_VERSION }}
-          app-name: ${{ env.APP_NAME }}
-          pak-name: ${{ env.PAK_NAME }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -79,11 +100,11 @@ jobs:
             key=${{ env.APP_NAME }}/prod.tfstate
           vars: "
             -var app_name=${{ env.APP_NAME }} \
-            -var zip_target=${{ env.PAK_NAME }} \
-            -var environment=${{ env.ENV }} \
+            -var zip_target=ldist \
             -var owner=$GITHUB_ACTOR \
             -var commit=$GITHUB_SHA \
             -var repo=$GITHUB_REPOSITORY
             -var account_id=${{ secrets.AWS_ACCOUNT_ID }} \
-            -var root_domain=${{ env.API_DOMAIN }}
+            -var root_domain=${{ env.API_DOMAIN }} \
+            -var timeout=30
             "
