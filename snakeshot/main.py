@@ -1,3 +1,4 @@
+import json
 from datetime import date
 import sys
 
@@ -13,12 +14,18 @@ def lambda_handler(event, context):
     logger.remove()
     logger.add(sys.stderr, level="INFO")
 
-    slam = validate_slam(event)
-    if not slam:
-        return Response.failure("slam is undefined")
+    # slam = validate_slam(event)
+    # if not slam:
+    #     return Response.failure("slam is undefined")
 
-    content = Response(slam, validate_year(event))
-    return content.as_json() if validate_json(event) else content.as_tables()
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps(event, indent=4),
+    }
+
+    # content = Response(slam, validate_year(event))
+    # return content.as_json() if validate_json(event) else content.as_tables()
 
 
 def validate_slam(event: dict) -> str:
