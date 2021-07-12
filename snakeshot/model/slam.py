@@ -5,7 +5,7 @@ from loguru import logger
 class Slam:
     _assoc = {"Mens": "ATP", "Womens": "WTA"}
 
-    def __init__(self, name: str, year: int, depth: int = 500):
+    def __init__(self, name: str, year: int, depth: int = 1000):
         logger.info(f"Generating {name} {year} tournament")
         self._name = name
         self._year = year

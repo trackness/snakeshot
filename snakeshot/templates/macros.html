@@ -1,0 +1,12 @@
+{% macro player_cols(player) %}
+  <td><img alt="{{ player.nationality }}" src="https://www.usopen.org/images/flags/{{ player.nationality }}_sm.gif"></td>
+  <td>{{ player.rank }}</td>
+  <td>{{ player.full_name }}</td>
+  {% if player.seed %}
+    <td>{{ player.seed }}</td>
+  {% elif player.entry_type %}
+    <td>{{ player.entry_type }}</td>
+  {% else %}
+    <td></td>
+  {% endif %}
+{% endmacro %}
