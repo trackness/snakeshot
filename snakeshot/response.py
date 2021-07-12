@@ -6,6 +6,8 @@ from loguru import logger
 
 from snakeshot.model.slam import Slam
 
+html = "text/html"
+
 
 class Response:
     def __init__(self, name: str, year: int):
@@ -30,7 +32,7 @@ class Response:
 
     def as_tables(self) -> dict:
         try:
-            return Response._success("text/html", self._write())
+            return Response._success(html, self._write())
         except Exception as e:
             return Response._failure(
                 e, f"Unable to generate {self._name} {self._year} html tables"
@@ -67,7 +69,7 @@ class Response:
         logger.error(f"{message}: {type(e)} - {e}")
         return {
             "statusCode": 500,
-            "headers": {"Content-Type": "text/html"},
+            "headers": {"Content-Type": html},
             "body": str(e),
         }
 
@@ -76,6 +78,6 @@ class Response:
         logger.error(f"{message}")
         return {
             "statusCode": 500,
-            "headers": {"Content-Type": "text/html"},
+            "headers": {"Content-Type": html},
             "body": message,
         }
