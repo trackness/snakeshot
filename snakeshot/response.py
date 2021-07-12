@@ -70,3 +70,12 @@ class Response:
             "headers": {"Content-Type": "text/html"},
             "body": str(e),
         }
+
+    @classmethod
+    def failure(cls, message: str) -> dict:
+        logger.error(f"{message}")
+        return {
+            "statusCode": 500,
+            "headers": {"Content-Type": "text/html"},
+            "body": message,
+        }
