@@ -1,4 +1,4 @@
-import json
+from datetime import date
 import sys
 
 from loguru import logger
@@ -13,21 +13,29 @@ def lambda_handler(event, context):
     logger.remove()
     logger.add(sys.stderr, level="INFO")
 
-    slam = event.get("queryStringParameters", {}).get("slam", None)
-    if slam is None:
+    slam = slam_name(event)
+    if slam_name is None:
         return Response.failure("slam is undefined")
 
-    year = event.get("queryStringParameters", {}).get("year", None)
-    if year is None:
-        return Response.failure("year is undefined")
+    content = Response(slam, year(event))
+    return content.as_json() if resp_json(event) else content.as_tables()
 
-    response_type = str(
-        event.get("queryStringParameters", {}).get("response_type", None)
+
+def slam_name(event: dict) -> str:
+    slam = event.get("queryStringParameters", {}).get(
+        "slam", event.get("http", {}).get("path", None)
+    )
+    return (
+        slam if slam in ["aus_open", "roland_garros", "wimbledon", "us_open"] else None
     )
 
-    logger.info(f"{slam} {year} event received")
-    content = Response(slam, year)
-    return content.as_json() if response_type == "json" else content.as_tables()
+
+def year(event: dict):
+    return int(event.get("queryStringParameters", {}).get("year", date.today().year))
+
+
+def resp_json(event: dict) -> bool:
+    return bool(event.get("queryStringParameters", {}).get("json", False))
 
 
 if __name__ == "__main__":
