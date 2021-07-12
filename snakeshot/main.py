@@ -14,7 +14,7 @@ def lambda_handler(event, context):
     logger.add(sys.stderr, level="INFO")
 
     slam = slam_name(event)
-    if slam_name is None:
+    if not slam_name:
         return Response.failure("slam is undefined")
 
     content = Response(slam, year(event))
@@ -23,10 +23,10 @@ def lambda_handler(event, context):
 
 def slam_name(event: dict) -> str:
     slam = event.get("queryStringParameters", {}).get(
-        "slam", event.get("http", {}).get("path", None)
+        "slam", event.get("http", {}).get("path", False)
     )
     return (
-        slam if slam in ["aus_open", "roland_garros", "wimbledon", "us_open"] else None
+        slam if slam in ["aus_open", "roland_garros", "wimbledon", "us_open"] else False
     )
 
 
