@@ -4,11 +4,11 @@
   <style type="text/css">
   
   </style>
-{% endblock %}
+{% endblock css %}
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
   {% for gender, tournament in slam.tournaments.items() %}
-    <h1>{{ gender }}</h1>
+    <h2>{{ gender }}</h2>
     <table class="table table-bordered table-sm">
       <tr>
         <th>Round</th>
@@ -33,4 +33,4 @@
       {% endfor %}
     </table>
   {% endfor %}
-{% endblock %}
+{% endblock body %}

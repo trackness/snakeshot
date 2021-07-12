@@ -88,6 +88,3 @@ class USOpen(Type1):
         gender = {"Mens": "MS", "Womens": "WS"}.get(gender)
         domain = "www.usopen.org/en_US"
         super().__init__(year, gender, "US Open", domain)
-
-
-headers = {"Wimbledon": {"Host": "www.wimbledon.com"}}
