@@ -4,7 +4,7 @@ import math
 from snakeshot.model.match import Match
 from snakeshot.model.player import Player
 from snakeshot.model.round import Round
-from snakeshot.sources.draws import Wimbledon
+from snakeshot.sources.draws import Wimbledon, USOpen
 from snakeshot.sources.odds import Odds
 from snakeshot.sources.tour import Tour
 from loguru import logger
@@ -17,7 +17,7 @@ class Tournament:
         # "australian_open": AustralianOpen,
         # "roland_garros", RolandGarros,
         "wimbledon": Wimbledon,
-        # "us_open": USOpen
+        "us_open": USOpen,
     }
     _assoc = {"Mens": "ATP", "Womens": "WTA"}
 
