@@ -31,6 +31,8 @@ class Tournament:
             logger.error(
                 f"{year} {slam} {gender} draw player count is not a power of 2: {n_players}"
             )
+            # TODO : any match with a Qualifier is omitted, sans the first one
+            [logger.warning(f"{idx:>3}: {v}") for idx, v in enumerate(players)]
             return
         self._populate_rounds(
             Tournament._draw(

@@ -8,7 +8,7 @@ from snakeshot.response import Response
 logger.info("Loading function")
 
 
-def lambda_handler(event, context):
+def lambda_handler(event: dict, context):
     # TODO : reimplement debug logging
     logger.remove()
     logger.add(sys.stderr, level="INFO")
@@ -41,4 +41,4 @@ def validate_json(event: dict) -> bool:
 
 
 if __name__ == "__main__":
-    lambda_handler(event={}, context={})
+    lambda_handler(event={"queryStringParameters": {"slam": "us_open"}}, context={})

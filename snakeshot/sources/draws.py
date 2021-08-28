@@ -84,6 +84,7 @@ class Wimbledon(Type1):
 
 
 class USOpen(Type1):
+    # https://www.usopen.org/en_US/scores/feeds/2021/draws/draws.json
     def __init__(self, year: int, gender: str):
         gender = {"Mens": "MS", "Womens": "WS"}.get(gender)
         domain = "www.usopen.org/en_US"
