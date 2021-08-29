@@ -1,5 +1,7 @@
+import webbrowser
 from datetime import date
 import sys
+from pathlib import Path
 
 from loguru import logger
 
@@ -41,4 +43,10 @@ def validate_json(event: dict) -> bool:
 
 
 if __name__ == "__main__":
-    lambda_handler(event={"queryStringParameters": {"slam": "us_open"}}, context={})
+    r: dict = lambda_handler(
+        event={"queryStringParameters": {"slam": "us_open"}}, context={}
+    )
+    output = Path(__file__).parent.resolve().joinpath("test.html")
+    with open(output, "w") as f:
+        f.write(r.get("body"))
+    webbrowser.open(f"file:{output}")

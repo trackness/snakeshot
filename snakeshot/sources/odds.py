@@ -7,28 +7,49 @@ from bs4 import BeautifulSoup
 from snakeshot.utils import session
 
 
+base_url = "https://www.oddschecker.com/tennis"
+
+
 class Odds:
     def __init__(self, slam: str, tour: str):
-        self._slam = slam
+        self._slam = slam.replace("_", "-")
         self._tour = tour
-        self._url = (
-            f"https://www.oddschecker.com/tennis/"
-            f"{self._slam.lower()}/{self._tour.lower()}/"
-            f"{self._tour.lower()}-{self._slam.lower()}/winner"
-        )
-        response = session.get(self._url, description=f"{self._tour} odds").text
-        if response == "" or response is None:
+        rows = []
+        urls = Odds._urls(2021, self._slam, self._tour)
+        for url in urls:
+            rows = self._fetch(url)
+            if rows:
+                break
+        if not rows:
+            logger.warning(f"No odds rows found in response from : {urls}")
             self._odds = {}
+        else:
+            self._odds = self._from_rows(rows)
+
+    def _fetch(self, url: str) -> []:
+        response = session.get(url, description=f"{self._tour} odds").text
+        if response == "" or response is None:
+            logger.warning(f"Invalid response received from {url}")
             return
         rows = Odds._find_rows(response)
         if len(rows) == 0 or rows is None:
-            self._odds = {}
+            logger.debug(f"No odds rows found in response from {url}")
             return
-        self._odds = self._from_rows(rows)
+        return rows
 
     @property
     def odds(self):
         return self._odds if self._odds is not None else {}
+
+    @staticmethod
+    def _urls(year: int, slam: str, tour: str) -> list:
+        slam = slam.lower()
+        tour = tour.lower()
+        return [
+            f"{base_url}/{slam}/{tour}/{tour}-{slam}/winner",
+            f"{base_url}/{slam}/{tour}/{year}-{slam}/winner",
+            f"{base_url}/{slam}/{tour}/{year}-{slam}-{tour[:-1]}/winner",
+        ]
 
     @classmethod
     def _find_rows(cls, source: str):
