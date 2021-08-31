@@ -90,15 +90,16 @@ resource "aws_apigatewayv2_api_mapping" "mapping" {
   stage       = "$default"
 //  stage       = aws_apigatewayv2_stage.default.name
 }
-//
-//resource "aws_apigatewayv2_stage" "default" {
-//  api_id = aws_apigatewayv2_api.api.id
-//  name = "default"
-//  access_log_settings {
-//    destination_arn = aws_cloudwatch_log_group.api_gw.arn
-//    format = "{\"requestId\":\"$context.requestId\", \"ip\": \"$context.identity.sourceIp\", \"caller\":\"$context.identity.caller\", \"user\":\"$context.identity.user\", \"requestTime\":\"$context.requestTime\", \"httpMethod\":\"$context.httpMethod\", \"resourcePath\":\"$context.resourcePath\", \"status\":\"$context.status\", \"protocol\":\"$context.protocol\", \"responseLength\":\"$context.responseLength\"}"
-//  }
-//}
+
+resource "aws_apigatewayv2_stage" "default" {
+  api_id = aws_apigatewayv2_api.api.id
+  name = "default"
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.api_gw.arn
+    format = "{\"requestId\":\"$context.requestId\", \"ip\": \"$context.identity.sourceIp\", \"caller\":\"$context.identity.caller\", \"user\":\"$context.identity.user\", \"requestTime\":\"$context.requestTime\", \"httpMethod\":\"$context.httpMethod\", \"resourcePath\":\"$context.resourcePath\", \"status\":\"$context.status\", \"protocol\":\"$context.protocol\", \"responseLength\":\"$context.responseLength\"}"
+  }
+  auto_deploy = true
+}
 
 resource "aws_apigatewayv2_integration" "slam" {
   api_id      = aws_apigatewayv2_api.api.id
@@ -107,6 +108,13 @@ resource "aws_apigatewayv2_integration" "slam" {
   integration_uri = aws_lambda_function.lambda.invoke_arn
   payload_format_version = "2.0"
   timeout_milliseconds = 30000
+}
+
+resource "aws_apigatewayv2_route" "example" {
+  api_id    = aws_apigatewayv2_api.api.id
+  route_key = "$default"
+
+  target = "integrations/${aws_apigatewayv2_integration.slam.id}"
 }
 
 // Cloudwatch
