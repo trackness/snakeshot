@@ -56,3 +56,9 @@ data "archive_file" "lambda_zip" {
   excludes    = ["${local.source_dir}/bin/*"]
   output_path = "${path.module}/${var.app_name}.zip"
 }
+
+resource "aws_cloudwatch_log_group" "hello_world" {
+  name = "/aws/lambda/${aws_lambda_function.lambda.function_name}"
+
+  retention_in_days = 7
+}
