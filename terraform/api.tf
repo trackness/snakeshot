@@ -96,5 +96,5 @@ resource "aws_apigatewayv2_integration" "slam" {
 
   integration_uri = aws_lambda_function.lambda.invoke_arn
   payload_format_version = "2.0"
-  timeout_milliseconds = 60000
+  timeout_milliseconds = 30000
 }
