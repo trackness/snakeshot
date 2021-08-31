@@ -84,21 +84,21 @@ resource "aws_acm_certificate_validation" "cert" {
   validation_record_fqdns = [for record in aws_route53_record.cert : record.fqdn]
 }
 
-resource "aws_apigatewayv2_api_mapping" "mapping" {
-  api_id      = aws_apigatewayv2_api.api.id
-  domain_name = aws_apigatewayv2_domain_name.api.id
-//  stage       = "$default"
-  stage       = aws_apigatewayv2_stage.default.name
-}
-
-resource "aws_apigatewayv2_stage" "default" {
-  api_id = aws_apigatewayv2_api.api.id
-  name = "default"
-  access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.api_gw.arn
-    format = "{\"requestId\":\"$context.requestId\", \"ip\": \"$context.identity.sourceIp\", \"caller\":\"$context.identity.caller\", \"user\":\"$context.identity.user\", \"requestTime\":\"$context.requestTime\", \"httpMethod\":\"$context.httpMethod\", \"resourcePath\":\"$context.resourcePath\", \"status\":\"$context.status\", \"protocol\":\"$context.protocol\", \"responseLength\":\"$context.responseLength\"}"
-  }
-}
+//resource "aws_apigatewayv2_api_mapping" "mapping" {
+//  api_id      = aws_apigatewayv2_api.api.id
+//  domain_name = aws_apigatewayv2_domain_name.api.id
+////  stage       = "$default"
+//  stage       = aws_apigatewayv2_stage.default.name
+//}
+//
+//resource "aws_apigatewayv2_stage" "default" {
+//  api_id = aws_apigatewayv2_api.api.id
+//  name = "default"
+//  access_log_settings {
+//    destination_arn = aws_cloudwatch_log_group.api_gw.arn
+//    format = "{\"requestId\":\"$context.requestId\", \"ip\": \"$context.identity.sourceIp\", \"caller\":\"$context.identity.caller\", \"user\":\"$context.identity.user\", \"requestTime\":\"$context.requestTime\", \"httpMethod\":\"$context.httpMethod\", \"resourcePath\":\"$context.resourcePath\", \"status\":\"$context.status\", \"protocol\":\"$context.protocol\", \"responseLength\":\"$context.responseLength\"}"
+//  }
+//}
 
 resource "aws_apigatewayv2_integration" "slam" {
   api_id      = aws_apigatewayv2_api.api.id
