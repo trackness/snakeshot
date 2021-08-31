@@ -121,7 +121,6 @@ locals {
         "routeKey",
         "protocol",
         "path",
-        "queryString",
         "responseLength",
         "responseLatency",
         "integrationRequestId",
@@ -132,13 +131,12 @@ locals {
       [
         "requestTime",
         "requestId",
-        "sourceIp",
+        "identity.sourceIp",
         "httpMethod",
         "status",
         "routeKey",
         "protocol",
         "path",
-        "requestOverride.querystring.querystring_name",
         "responseLength",
         "responseLatency",
         "integration.requestId",
@@ -148,6 +146,10 @@ locals {
       ]
     )
   )
+  abc = split([
+    "abc: def",
+    "ghi: jkl"
+  ])
 }
 
 resource "aws_apigatewayv2_stage" "default" {
