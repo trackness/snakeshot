@@ -33,6 +33,8 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
   statement {
     actions = [
       "sts:AssumeRole",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
     ]
 
     effect = "Allow"
