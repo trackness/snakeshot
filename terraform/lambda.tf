@@ -33,6 +33,20 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
   statement {
     actions = [
       "sts:AssumeRole",
+    ]
+
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "lambda_cloudwatch_policy" {
+  statement {
+    actions = [
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
