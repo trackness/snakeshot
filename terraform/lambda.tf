@@ -21,6 +21,8 @@ resource "aws_lambda_function" "lambda" {
   }
 }
 
+// Execution role
+
 resource "aws_iam_role" "lambda_exec_role" {
   name        = "lambda-exec-role-${local.function_name}"
   path        = "/"
@@ -31,12 +33,8 @@ resource "aws_iam_role" "lambda_exec_role" {
 
 data "aws_iam_policy_document" "lambda_assume_role_policy" {
   statement {
-    actions = [
-      "sts:AssumeRole",
-    ]
-
     effect = "Allow"
-
+    actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"
       identifiers = ["lambda.amazonaws.com"]
@@ -44,21 +42,7 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
   }
 }
 
-data "aws_iam_policy_document" "lambda_cloudwatch_policy" {
-  statement {
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
-
-    effect = "Allow"
-
-    principals {
-      type        = "Service"
-      identifiers = ["lambda.amazonaws.com"]
-    }
-  }
-}
+// Artefact
 
 locals {
   source_dir = "${path.module}/../${local.zip_target}"
@@ -73,8 +57,30 @@ data "archive_file" "lambda_zip" {
   output_path = "${path.module}/${var.app_name}.zip"
 }
 
-resource "aws_cloudwatch_log_group" "hello_world" {
-  name = "/aws/lambda/${aws_lambda_function.lambda.function_name}"
+// Cloudwatch
 
+resource "aws_cloudwatch_log_group" "lambda" {
+  name = "/aws/lambda/${aws_lambda_function.lambda.function_name}"
   retention_in_days = 7
 }
+
+data "aws_iam_policy_document" "lambda_cloudwatch_policy" {
+  statement {
+    effect = "Allow"
+    actions = ["logs:CreateLogStream"]
+    resources = [aws_cloudwatch_log_group.lambda.arn]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:PutLogEvents"]
+    resources = ["${aws_cloudwatch_log_group.lambda.arn}:*"]
+  }
+}
+
+resource "aws_iam_role_policy" "test_lambda_cloudwatch_policy" {
+  name = "lambda-cloudwatch-policy-${local.function_name}-cloudwatch-policy"
+  policy = data.aws_iam_policy_document.lambda_cloudwatch_policy.json
+  role = aws_iam_role.lambda_exec_role.id
+}
+
