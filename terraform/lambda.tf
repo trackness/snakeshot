@@ -78,9 +78,17 @@ data "aws_iam_policy_document" "lambda_cloudwatch" {
   }
 }
 
-resource "aws_iam_role_policy" "lambda_cloudwatch" {
-  name = "lambda-cloudwatch-role-policy-${local.function_name}"
+//resource "aws_iam_role_policy" "lambda_cloudwatch" {
+//  name = "lambda-cloudwatch-role-policy-${local.function_name}"
+//  policy = data.aws_iam_policy_document.lambda_cloudwatch.json
+//  role = aws_iam_role.lambda_exec_role.id
+//}
+
+resource "aws_iam_policy" "lambda_cloudwatch" {
   policy = data.aws_iam_policy_document.lambda_cloudwatch.json
-  role = aws_iam_role.lambda_exec_role.id
 }
 
+resource "aws_iam_role_policy_attachment" "lambda_cloudwatch" {
+  policy_arn = aws_iam_policy.lambda_cloudwatch.arn
+  role = aws_iam_role.lambda_exec_role.name
+}
