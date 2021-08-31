@@ -107,32 +107,72 @@ resource "aws_apigatewayv2_api_mapping" "mapping" {
   stage       = aws_apigatewayv2_stage.default.name
 }
 
+locals {
+  api_gw_cloudwatch_format = join(
+    ",",
+    formatlist(
+      "\"%s\":\"$context.%s\"",
+      [
+        "requestTime",
+        "requestId",
+        "requestIp",
+        "httpMethod",
+        "status",
+        "routeKey",
+        "protocol",
+        "path",
+        "queryString",
+        "responseLength",
+        "responseLatency",
+        "integrationRequestId",
+        "integrationResponseStatus",
+        "integrationLatency",
+        "integrationServiceStatus",
+      ],
+      [
+        "requestTime",
+        "requestId",
+        "sourceIp",
+        "httpMethod",
+        "status",
+        "routeKey",
+        "protocol",
+        "path",
+        "requestOverride.querystring.querystring_name",
+        "responseLength",
+        "responseLatency",
+        "integration.requestId",
+        "integration.status",
+        "integration.latency",
+        "integration.integrationStatus",
+      ]
+    )
+  )
+}
+
 resource "aws_apigatewayv2_stage" "default" {
   api_id = aws_apigatewayv2_api.api.id
   name = "v1"
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_gw.arn
-    format = "{" +
-      "\"requestTime\": \"$context.requestTime\"," +
-      "\"requestId\":\"$context.requestId\"," +
-      "\"ip\": \"$context.identity.sourceIp\"," +
-//      "\"caller\":\"$context.identity.caller\"," +
-//      "\"user\":\"$context.identity.user\"," +
-      "\"requestTime\":\"$context.requestTime\"," +
-      "\"httpMethod\":\"$context.httpMethod\"," +
-//      "\"resourcePath\":\"$context.resourcePath\"," +
-      "\"status\":\"$context.status\"," +
-      "\"routeKey\": \"$context.routeKey\"," +
-      "\"protocol\":\"$context.protocol\"," +
-      "\"path\":\"$context.path\"," +
-      "\"queryString\":\"$$context.requestOverride.querystring.querystring_name\"," +
-      "\"responseLength\":\"$context.responseLength\"," +
-      "\"responseLatency\":\"$context.responseLatency\"," +
-      "\"integrationRequestId\": \"$context.integration.requestId\"," +
-      "\"integrationResponseStatus\": \"$context.integration.status\"," +
-      "\"integrationLatency\": \"$context.integration.latency\"," +
-      "\"integrationServiceStatus\": \"$context.integration.integrationStatus\"" +
-    "}"
+    format = "{${local.api_gw_cloudwatch_format}}"
+//    format = "{" +
+//      "\"requestTime\": \"$context.requestTime\"," +
+//      "\"requestId\":\"$context.requestId\"," +
+//      "\"ip\": \"$context.identity.sourceIp\"," +
+//      "\"httpMethod\":\"$context.httpMethod\"," +
+//      "\"status\":\"$context.status\"," +
+//      "\"routeKey\": \"$context.routeKey\"," +
+//      "\"protocol\":\"$context.protocol\"," +
+//      "\"path\":\"$context.path\"," +
+//      "\"queryString\":\"$$context.requestOverride.querystring.querystring_name\"," +
+//      "\"responseLength\":\"$context.responseLength\"," +
+//      "\"responseLatency\":\"$context.responseLatency\"," +
+//      "\"integrationRequestId\": \"$context.integration.requestId\"," +
+//      "\"integrationResponseStatus\": \"$context.integration.status\"," +
+//      "\"integrationLatency\": \"$context.integration.latency\"," +
+//      "\"integrationServiceStatus\": \"$context.integration.integrationStatus\"" +
+//    "}"
   }
   auto_deploy = true
 }
