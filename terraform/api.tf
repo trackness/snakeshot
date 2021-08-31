@@ -146,10 +146,10 @@ locals {
       ]
     )
   )
-  abc = split([
-    "abc: def",
-    "ghi: jkl"
-  ])
+//  abc = split([
+//    "abc: def",
+//    "ghi: jkl"
+//  ])
 }
 
 resource "aws_apigatewayv2_stage" "default" {
