@@ -26,12 +26,12 @@ resource "aws_lambda_function" "lambda" {
 resource "aws_iam_role" "lambda_exec_role" {
   name        = "lambda-exec-role-${local.function_name}"
   path        = "/"
-  description = "Role for lambda to publish to sns function"
+  description = "Role for lambda to execute"
 
-  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
 }
 
-data "aws_iam_policy_document" "lambda_assume_role_policy" {
+data "aws_iam_policy_document" "lambda_assume_role" {
   statement {
     effect = "Allow"
     actions = ["sts:AssumeRole"]
@@ -64,7 +64,7 @@ resource "aws_cloudwatch_log_group" "lambda" {
   retention_in_days = 7
 }
 
-data "aws_iam_policy_document" "lambda_cloudwatch_policy" {
+data "aws_iam_policy_document" "lambda_cloudwatch" {
   statement {
     effect = "Allow"
     actions = ["logs:CreateLogStream"]
@@ -78,9 +78,9 @@ data "aws_iam_policy_document" "lambda_cloudwatch_policy" {
   }
 }
 
-resource "aws_iam_role_policy" "test_lambda_cloudwatch_policy" {
-  name = "lambda-cloudwatch-policy-${local.function_name}-cloudwatch-policy"
-  policy = data.aws_iam_policy_document.lambda_cloudwatch_policy.json
+resource "aws_iam_role_policy" "lambda_cloudwatch" {
+  name = "lambda-cloudwatch-role-policy-${local.function_name}"
+  policy = data.aws_iam_policy_document.lambda_cloudwatch.json
   role = aws_iam_role.lambda_exec_role.id
 }
 
