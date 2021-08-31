@@ -98,3 +98,78 @@ resource "aws_apigatewayv2_integration" "slam" {
   payload_format_version = "2.0"
   timeout_milliseconds = 30000
 }
+
+// Cloudwatch
+
+resource "aws_cloudwatch_log_group" "api_gw" {
+  name = "/aws/api_gw/${aws_apigatewayv2_api.api.name}"
+  retention_in_days = 7
+}
+
+// copied from lambda, need to assign permissions as mentioned here
+// https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-logging.html
+
+resource "aws_iam_role" "api_gw_cloudwatch" {
+  name        = "api-gw-cloudwatch-${aws_apigatewayv2_api.api.name}"
+  path        = "/"
+  description = "Role for CloudWatch logging"
+
+  assume_role_policy = data.aws_iam_policy_document.api_gw_cloudwatch.json
+}
+
+data "aws_iam_policy_document" "api_gw_cloudwatch" {
+  statement {
+    effect = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
+    }
+  }
+}
+
+data aws_iam_policy AmazonAPIGatewayPushToCloudWatchLogs {
+  arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+}
+
+# Attach AmazonAPIGatewayPushToCloudWatchLogs policy to API Gateway role to allow it to write logs
+resource "aws_iam_role_policy_attachment" "attach_cloudwatch_logging" {
+  role       = aws_iam_role.api_gw_cloudwatch.name
+  policy_arn = data.aws_iam_policy.AmazonAPIGatewayPushToCloudWatchLogs.arn
+}
+
+# Enable logging for the API Gateway
+resource "aws_api_gateway_account" "main" {
+  cloudwatch_role_arn = aws_iam_role.api_gw_cloudwatch.arn
+}
+
+
+
+//resource "aws_iam_role" "api_gw_cloudwatch" {
+//  name = "api-gw-cloudwatch-role-${local.function_name}"
+//  path = "/"
+//  assume_role_policy = data.aws_iam_policy_document.api_gw_cloudwatch.json
+//}
+//
+//data "aws_iam_policy_document" "api_gw_cloudwatch" {
+//  statement {
+//    effect = "Allow"
+//    actions = ["logs:CreateLogStream"]
+//    resources = [aws_cloudwatch_log_group.api_gw.arn]
+//  }
+//
+//  statement {
+//    effect    = "Allow"
+//    actions   = ["logs:PutLogEvents"]
+//    resources = ["${aws_cloudwatch_log_group.api_gw.arn}:*"]
+//  }
+//}
+
+//resource "aws_iam_policy" "api_gw_cloudwatch" {
+//  policy = data.aws_iam_policy_document.api_gw_cloudwatch.json
+//}
+
+//resource "aws_iam_role_policy_attachment" "api_gw_cloudwatch" {
+//  policy_arn = aws_iam_policy.api_gw_cloudwatch.arn
+//  role = aws_iam_role.lambda_exec_role.name
+//}
