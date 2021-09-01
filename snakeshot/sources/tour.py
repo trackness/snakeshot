@@ -1,6 +1,7 @@
 import csv
 import operator
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 from typing import Generator
 
 from snakeshot.utils import session
@@ -32,25 +33,24 @@ class Tour:
         )
 
     def _players_dict(self) -> Generator:
-        for player in self._target_to_list("players"):
+        for player in self._response_to_rows("players"):
             yield int(player.get("id")), Tour._full_name(player)
 
     def _rankings_dict(self) -> Generator:
-        for ranking in self._target_to_list("rankings_current"):
+        for ranking in self._response_to_rows("rankings_current"):
             if int(ranking.get("ranking")) <= self._depth:
                 yield int(ranking.get("id")), int(ranking.get("ranking"))
 
-    def _target_to_list(self, target) -> Generator:
-        response = session.get(self._url(target), f"{self._tour} {target}", stream=True)
-        return Tour._response_to_rows(target, response)
+    def _response_to_rows(self, target) -> Generator:
 
-    @classmethod
-    def _response_to_rows(cls, target, content) -> Generator:
-        yield from csv.DictReader(
-            content.iter_lines(decode_unicode=True),
-            delimiter=",",
-            fieldnames=Tour._fieldnames.get(target),
-        )
+        with closing(
+            session.get(self._url(target), f"{self._tour} {target}", stream=True)
+        ) as r:
+            yield from csv.DictReader(
+                r.iter_lines(decode_unicode=True),
+                delimiter=",",
+                fieldnames=Tour._fieldnames.get(target),
+            )
 
     def _url(self, target: str):
         return (
