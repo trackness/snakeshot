@@ -31,7 +31,7 @@ def get_session(add: dict, headers: dict) -> Session:
         }
     if add is not None:
         headers.update(add)
-    [logger.debug(f"{k}: {v}") for k, v in headers.items()]
+    # [logger.debug(f"{k}: {v}") for k, v in headers.items()]
     session.headers = headers
     return session
 
