@@ -13,7 +13,7 @@ logger.info("Loading function")
 def lambda_handler(event: dict, context):
     # TODO : reimplement debug logging
     logger.remove()
-    logger.add(sys.stderr, level="INFO")
+    logger.add(sys.stderr, level="DEBUG", enqueue=False)
 
     slam = validate_slam(event)
     if not slam:
