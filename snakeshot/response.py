@@ -13,7 +13,7 @@ class Response:
     def __init__(self, name: str, year: int):
         self._name = name
         self._year = year
-        self._slam = Slam(name, year, depth=1000)
+        self._slam = Slam(name, year, depth=500)
 
     def as_json(self) -> dict:
         try:
