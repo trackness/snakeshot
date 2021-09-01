@@ -26,9 +26,9 @@ class Tour:
             players = pool.submit(self._players_dict)
             rankings = pool.submit(self._rankings_dict)
         players = dict(players.result())
-        rankings = dict(rankings.result())
+        rankings = rankings.result()
         return Tour._sort_dict_by_value(
-            {players.get(player_id): ranking for player_id, ranking in rankings.items()}
+            {players.get(player_id): ranking for player_id, ranking in rankings}
         )
 
     def _players_dict(self) -> Generator:
