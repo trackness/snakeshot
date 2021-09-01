@@ -3,7 +3,7 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.lambda_exec_role.arn
 
   handler      = local.handler
-  memory_size  = var.memory_size != 0 ? var.memory_size : 256
+  memory_size  = var.memory_size != 0 ? var.memory_size : 128
   runtime      = var.runtime
   timeout      = var.timeout != 0 ? var.timeout : 3
   package_type = "Zip"
