@@ -1,5 +1,6 @@
 import json
 import math
+from concurrent.futures import ThreadPoolExecutor
 
 from snakeshot.model.match import Match
 from snakeshot.model.player import Player
@@ -22,7 +23,15 @@ class Tournament:
     _assoc = {"Mens": "ATP", "Womens": "WTA"}
 
     def __init__(self, slam: str, year: int, gender: str, depth: int):
-        players: dict = Tournament._slams.get(slam.lower())(year, gender).players
+        draw = Tournament._slams.get(slam.lower())
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            players = pool.submit(draw, year, gender)
+            rankings = pool.submit(Tour, Tournament._assoc.get(gender), depth)
+            odds = pool.submit(Odds, slam, gender)
+        players = players.result().players
+        rankings = rankings.result().rankings
+        odds = odds.result().odds
+
         self._rounds: list = []
         n_players = len(players)
         if not (n_players > 0 and (n_players & (n_players - 1))):
@@ -34,8 +43,6 @@ class Tournament:
             # TODO : any match with a Qualifier is omitted, sans the first one
             [logger.warning(f"{idx:>3}: {v}") for idx, v in enumerate(players)]
             return
-        rankings = Tour(Tournament._assoc.get(gender), depth).rankings
-        odds = Odds(slam, gender).odds
         self._populate_rounds(
             Tournament._draw(
                 players,
