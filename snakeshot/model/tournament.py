@@ -23,9 +23,8 @@ class Tournament:
     _assoc = {"Mens": "ATP", "Womens": "WTA"}
 
     def __init__(self, slam: str, year: int, gender: str, depth: int):
-        draw = Tournament._slams.get(slam.lower())
         with ThreadPoolExecutor(max_workers=3) as pool:
-            players = pool.submit(draw, year, gender)
+            players = pool.submit(Tournament._slams.get(slam.lower()), year, gender)
             rankings = pool.submit(Tour, Tournament._assoc.get(gender), depth)
             odds = pool.submit(Odds, slam, gender)
         players = players.result().players
