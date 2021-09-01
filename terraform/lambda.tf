@@ -3,7 +3,7 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.lambda_exec_role.arn
 
   handler      = local.handler
-  memory_size  = var.memory_size != 0 ? var.memory_size : 128
+  memory_size  = var.memory_size != 0 ? var.memory_size : 256
   runtime      = var.runtime
   timeout      = var.timeout != 0 ? var.timeout : 3
   package_type = "Zip"
@@ -77,12 +77,6 @@ data "aws_iam_policy_document" "lambda_cloudwatch" {
     resources = ["${aws_cloudwatch_log_group.lambda.arn}:*"]
   }
 }
-
-//resource "aws_iam_role_policy" "lambda_cloudwatch" {
-//  name = "lambda-cloudwatch-role-policy-${local.function_name}"
-//  policy = data.aws_iam_policy_document.lambda_cloudwatch.json
-//  role = aws_iam_role.lambda_exec_role.id
-//}
 
 resource "aws_iam_policy" "lambda_cloudwatch" {
   policy = data.aws_iam_policy_document.lambda_cloudwatch.json
