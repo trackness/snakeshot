@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal
 from statistics import mean
 from loguru import logger
@@ -14,27 +15,27 @@ class Odds:
     def __init__(self, slam: str, tour: str):
         self._slam = slam.replace("_", "-")
         self._tour = tour
-        rows = []
         urls = Odds._urls(2021, self._slam, self._tour)
-        for url in urls:
-            rows = self._fetch(url)
-            if rows:
-                break
+
+        with ThreadPoolExecutor(max_workers=len(urls)) as pool:
+            rows_list = list(pool.map(self._fetch, urls))
+        rows = max(rows_list, key=len)
+
         if not rows:
             logger.warning(f"No odds rows found in response from : {urls}")
             self._odds = {}
         else:
             self._odds = self._from_rows(rows)
 
-    def _fetch(self, url: str) -> []:
+    def _fetch(self, url: str) -> list:
         response = session.get(url, description=f"{self._tour} odds").text
         if response == "" or response is None:
             logger.warning(f"Invalid response received from {url}")
-            return
+            return []
         rows = Odds._find_rows(response)
         if len(rows) == 0 or rows is None:
             logger.debug(f"No odds rows found in response from {url}")
-            return
+            return []
         return rows
 
     @property
@@ -49,6 +50,7 @@ class Odds:
             f"{base_url}/{slam}/{tour}/{tour}-{slam}/winner",
             f"{base_url}/{slam}/{tour}/{year}-{slam}/winner",
             f"{base_url}/{slam}/{tour}/{year}-{slam}-{tour[:-1]}/winner",
+            f"{base_url}/{slam}/{tour}/{slam}-{tour[:-1]}/winner",
         ]
 
     @classmethod
