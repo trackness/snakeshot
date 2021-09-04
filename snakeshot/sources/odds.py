@@ -49,9 +49,9 @@ class Odds:
         slam = slam.lower()
         tour = tour.lower()
         return [
+            f"{base_url}/{slam}/{tour}/{year}-{slam}-{tour[:-1]}/winner",
             f"{base_url}/{slam}/{tour}/{tour}-{slam}/winner",
             f"{base_url}/{slam}/{tour}/{year}-{slam}/winner",
-            f"{base_url}/{slam}/{tour}/{year}-{slam}-{tour[:-1]}/winner",
             f"{base_url}/{slam}/{tour}/{slam}-{tour[:-1]}/winner",
         ]
 

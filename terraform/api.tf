@@ -103,7 +103,6 @@ resource "aws_apigatewayv2_route" "example" {
 resource "aws_apigatewayv2_api_mapping" "mapping" {
   api_id      = aws_apigatewayv2_api.api.id
   domain_name = aws_apigatewayv2_domain_name.api.id
-//  stage       = "$default"
   stage       = aws_apigatewayv2_stage.default.name
 }
 
@@ -146,10 +145,6 @@ locals {
       ]
     )
   )
-//  abc = split([
-//    "abc: def",
-//    "ghi: jkl"
-//  ])
 }
 
 resource "aws_apigatewayv2_stage" "default" {
@@ -185,86 +180,3 @@ resource "aws_cloudwatch_log_group" "api_gw" {
   name = "/aws/api_gw/${aws_apigatewayv2_api.api.name}"
   retention_in_days = 7
 }
-
-//// supposed to be per-account, not per-repo
-//resource "aws_api_gateway_account" "api_gw_cloudwatch" {
-//  cloudwatch_role_arn = aws_iam_role.api_gw_cloudwatch.arn
-//}
-//
-//// copied from lambda, need to assign permissions as mentioned here
-//// https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-logging.html
-
-//resource "aws_iam_role" "api_gw_cloudwatch" {
-//  name        = "api-gw-cloudwatch-${aws_apigatewayv2_api.api.name}"
-//  path        = "/"
-//  description = "Role for CloudWatch logging"
-//
-//  assume_role_policy = data.aws_iam_policy_document.api_gw_assume_role.json
-//}
-//
-//data "aws_iam_policy_document" "api_gw_assume_role" {
-//  statement {
-//    effect = "Allow"
-//    actions = ["sts:AssumeRole"]
-//    principals {
-//      type        = "Service"
-//      identifiers = ["apigateway.amazonaws.com"]
-//    }
-//  }
-//}
-//
-//resource "aws_iam_role_policy" "api_gw_cloudwatch" {
-//  name = "api-gw-cloudwatch-role-${local.function_name}"
-//  role = aws_iam_role.api_gw_cloudwatch.id
-//  policy = data.aws_iam_policy_document.api_gw_cloudwatch.json
-//}
-//
-//data "aws_iam_policy_document" "api_gw_cloudwatch" {
-//  statement {
-//    effect = "Allow"
-//    actions = ["logs:CreateLogStream", "logs:PutLogEvents"]
-//    resources = ["${aws_cloudwatch_log_group.lambda.arn}:*"]
-//  }
-//}
-
-//# Attach AmazonAPIGatewayPushToCloudWatchLogs policy to API Gateway role to allow it to write logs
-//resource "aws_iam_role_policy_attachment" "attach_cloudwatch_logging" {
-//  role       = aws_iam_role.api_gw_cloudwatch.name
-//  policy_arn = data.aws_iam_policy.AmazonAPIGatewayPushToCloudWatchLogs.arn
-//}
-//
-//# Enable logging for the API Gateway
-//resource "aws_api_gateway_account" "main" {
-//  cloudwatch_role_arn = aws_iam_role.api_gw_cloudwatch.arn
-//}
-
-
-
-//resource "aws_iam_role" "api_gw_cloudwatch" {
-//  name = "api-gw-cloudwatch-role-${local.function_name}"
-//  path = "/"
-//  assume_role_policy = data.aws_iam_policy_document.api_gw_cloudwatch.json
-//}
-//
-//data "aws_iam_policy_document" "api_gw_cloudwatch" {
-//  statement {
-//    effect = "Allow"
-//    actions = ["logs:CreateLogStream"]
-//    resources = [aws_cloudwatch_log_group.api_gw.arn]
-//  }
-//
-//  statement {
-//    effect    = "Allow"
-//    actions   = ["logs:PutLogEvents"]
-//    resources = ["${aws_cloudwatch_log_group.api_gw.arn}:*"]
-//  }
-//}
-
-//resource "aws_iam_policy" "api_gw_cloudwatch" {
-//  policy = data.aws_iam_policy_document.api_gw_cloudwatch.json
-//}
-
-//resource "aws_iam_role_policy_attachment" "api_gw_cloudwatch" {
-//  policy_arn = aws_iam_policy.api_gw_cloudwatch.arn
-//  role = aws_iam_role.lambda_exec_role.name
-//}
