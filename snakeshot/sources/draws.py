@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Generator
 
 from snakeshot.utils import session
 
@@ -30,7 +31,7 @@ class Type1(Draw):
     def _draw_to_dict(self):
         draw_list: list = self._draws_list()
         draw: dict = self._draw(draw_list)
-        matches: list = Type1._matches(draw)
+        matches: Generator = Type1._matches(draw)
         return Type1._players(matches)
 
     def _draws_list(self) -> list:
@@ -52,11 +53,11 @@ class Type1(Draw):
         return dict(draw.json())
 
     @classmethod
-    def _matches(cls, draw: dict) -> list:
-        return [match for idx, match in enumerate(draw.get("matches")) if idx <= 63]
+    def _matches(cls, draw: dict) -> Generator:
+        return (match for idx, match in enumerate(draw.get("matches")) if idx <= 63)
 
     @classmethod
-    def _players(cls, matches: list) -> dict:
+    def _players(cls, matches: Generator) -> dict:
         players = {}
         for match in matches:
             players.update(Type1._team_to_player(match.get("team1")))
@@ -84,6 +85,7 @@ class Wimbledon(Type1):
 
 
 class USOpen(Type1):
+    # https://www.usopen.org/en_US/scores/feeds/2021/draws/draws.json
     def __init__(self, year: int, gender: str):
         gender = {"Mens": "MS", "Womens": "WS"}.get(gender)
         domain = "www.usopen.org/en_US"

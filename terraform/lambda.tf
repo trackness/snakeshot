@@ -3,7 +3,7 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.lambda_exec_role.arn
 
   handler      = local.handler
-  memory_size  = var.memory_size != 0 ? var.memory_size : 128
+  memory_size  = var.memory_size != 0 ? var.memory_size : 1024
   runtime      = var.runtime
   timeout      = var.timeout != 0 ? var.timeout : 3
   package_type = "Zip"
@@ -21,28 +21,28 @@ resource "aws_lambda_function" "lambda" {
   }
 }
 
+// Execution role
+
 resource "aws_iam_role" "lambda_exec_role" {
   name        = "lambda-exec-role-${local.function_name}"
   path        = "/"
-  description = "Role for lambda to publish to sns function"
+  description = "Role for lambda to execute"
 
-  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
 }
 
-data "aws_iam_policy_document" "lambda_assume_role_policy" {
+data "aws_iam_policy_document" "lambda_assume_role" {
   statement {
-    actions = [
-      "sts:AssumeRole",
-    ]
-
     effect = "Allow"
-
+    actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"
       identifiers = ["lambda.amazonaws.com"]
     }
   }
 }
+
+// Artefact
 
 locals {
   source_dir = "${path.module}/../${local.zip_target}"
@@ -55,4 +55,34 @@ data "archive_file" "lambda_zip" {
   source_dir  = local.source_dir
   excludes    = ["${local.source_dir}/bin/*"]
   output_path = "${path.module}/${var.app_name}.zip"
+}
+
+// Cloudwatch
+
+resource "aws_cloudwatch_log_group" "lambda" {
+  name = "/aws/lambda/${aws_lambda_function.lambda.function_name}"
+  retention_in_days = 7
+}
+
+data "aws_iam_policy_document" "lambda_cloudwatch" {
+  statement {
+    effect = "Allow"
+    actions = ["logs:CreateLogStream"]
+    resources = [aws_cloudwatch_log_group.lambda.arn]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:PutLogEvents"]
+    resources = ["${aws_cloudwatch_log_group.lambda.arn}:*"]
+  }
+}
+
+resource "aws_iam_policy" "lambda_cloudwatch" {
+  policy = data.aws_iam_policy_document.lambda_cloudwatch.json
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_cloudwatch" {
+  policy_arn = aws_iam_policy.lambda_cloudwatch.arn
+  role = aws_iam_role.lambda_exec_role.name
 }

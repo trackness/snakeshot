@@ -1,5 +1,8 @@
 import csv
 import operator
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
+from typing import Generator
 
 from snakeshot.utils import session
 
@@ -20,38 +23,34 @@ class Tour:
         return self._tour_players
 
     def _build_tour_players(self) -> dict:
-        players = self._players_dict()
-        rankings = self._rankings_dict()
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            players = pool.submit(self._players_dict)
+            rankings = pool.submit(self._rankings_dict)
+        players = dict(players.result())
+        rankings = rankings.result()
         return Tour._sort_dict_by_value(
-            {players.get(player_id): ranking for player_id, ranking in rankings.items()}
+            {players.get(player_id): ranking for player_id, ranking in rankings}
         )
 
-    def _players_dict(self) -> dict:
-        return {
-            int(player.get("id")): Tour._full_name(player)
-            for player in self._target_to_list("players")
-        }
+    def _players_dict(self) -> Generator:
+        for player in self._response_to_rows("players"):
+            yield int(player.get("id")), Tour._full_name(player)
 
-    def _rankings_dict(self) -> dict:
-        return {
-            int(ranking.get("id")): int(ranking.get("ranking"))
-            for ranking in self._target_to_list("rankings_current")
-            if int(ranking.get("ranking")) <= self._depth
-        }
+    def _rankings_dict(self) -> Generator:
+        for ranking in self._response_to_rows("rankings_current"):
+            if int(ranking.get("ranking")) <= self._depth:
+                yield int(ranking.get("id")), int(ranking.get("ranking"))
 
-    def _target_to_list(self, target) -> list:
-        response = session.get(self._url(target), f"{self._tour} {target}", stream=True)
-        return Tour._response_to_dict(target, response)
+    def _response_to_rows(self, target) -> Generator:
 
-    @classmethod
-    def _response_to_dict(cls, target, content) -> list:
-        return list(
-            csv.DictReader(
-                content.iter_lines(decode_unicode=True),
+        with closing(
+            session.get(self._url(target), f"{self._tour} {target}", stream=True)
+        ) as r:
+            yield from csv.DictReader(
+                r.iter_lines(decode_unicode=True),
                 delimiter=",",
                 fieldnames=Tour._fieldnames.get(target),
             )
-        )
 
     def _url(self, target: str):
         return (
